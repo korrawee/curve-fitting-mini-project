@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta  http-equiv="X-HA-Compatible" content="IE=egde">
+    <meta name="viewport" content="width=devide-width, initial-scale=1.0">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@3.7.1/dist/chart.min.js" type="text/javascript"></script>
+
+    <title>Index</title>
+    <link rel="'stylesheet" href="css/style.css"/>
+</head>
+<body>
+    <h1>Index</h1>
+    <form action="/" method="post">
+        <label for="data">Enter your data:</label>
+        <input type="text" id="data" name="data"><br><br>
+        
+      </form>
+    <div>
+        <canvas id="myChart" style="width:100%;max-width:700px"></canvas>
+    </div>
+    <script>
+        window.onload = function() {
+        // put chart.js code here
+        // Ploting
+        new Chart("myChart", {
+            type: "line",
+            data: {
+            labels: [0,1,2,3,4,5],
+            datasets: [{
+                backgroundColor: "rgba(0,0,0,1.0)",
+                borderColor: "rgba(0,0,0,0.1)",
+                data: [1,2,3,4,5,6,0,1,2,2,3],
+                
+            }]
+            }
+        });
+        console.log('html')
+        }
+        
+    </script>
+</body>
+</html>
