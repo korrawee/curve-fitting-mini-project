@@ -40,7 +40,7 @@ app.get('^/$|/index(.html)?', (req,res) => {
     // res.sendFile('./views/index.html', {root: __dirname});
     const math = require('mathjs');
     const my_path = path.join(__dirname, 'views', 'index.html');
-    fs.readFile(my_path, 'utf8', async (err,data) => {
+    fs.readFile(my_path, 'utf8', (err,data) => {
         if(err) next();
         
         // Example data
@@ -67,7 +67,7 @@ app.get('^/$|/index(.html)?', (req,res) => {
 
         data = data.replace(/data: \[.*/g, `data: [${String(y_data)}],` );
         data = data.replace(/labels: \[.*/g, `labels: [${String(x_data)}],`);
-        await fs.writeFile(my_path, data, 'utf8', function (err) {
+        fs.writeFile(my_path, data, 'utf8', function (err) {
             if (err) return console.log(err);
 
         });
@@ -79,18 +79,18 @@ app.get('^/$|/index(.html)?', (req,res) => {
 app.post('^/$|/index(.html)?', (req,res) => {
 
     const my_path = path.join(__dirname, 'views', 'index.html');
-    fs.readFile(my_path, 'utf8',async (err,data) => {
+    fs.readFile(my_path, 'utf8', (err,data) => {
         if(err) next();
         
         data = data.replace(/data: \[.*/g, `data: [${String(req.body["data"])}],` );
-        await fs.writeFile(my_path, data, 'utf8', function (err) {
+        fs.writeFile(my_path, data, 'utf8', function (err) {
             if (err) return console.log(err);
         
         });
         console.log(data);
     });
 
-    res.sendFile(my_path);
+    res.redirect(req.get('referer'));
 });
 
 app.get('/new-page(.html)?', (req,res) => {
