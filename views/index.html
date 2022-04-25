@@ -6,7 +6,7 @@
     <meta  http-equiv="X-HA-Compatible" content="IE=egde">
     <meta name="viewport" content="width=devide-width, initial-scale=1.0">
     <script src="https://cdn.jsdelivr.net/npm/chart.js@3.7.1/dist/chart.min.js" type="text/javascript"></script>
-
+    
     <title>Index</title>
     <link rel="'stylesheet" href="css/style.css"/>
 </head>
@@ -27,18 +27,12 @@
         new Chart("myChart", {
             type: "line",
             data: {
-            labels: [0,1,2,3,4,5],
-            datasets: [{
-                backgroundColor: "rgba(0,0,0,1.0)",
-                borderColor: "rgba(0,0,0,0.1)",
-                data: [1,1.5,2,5,10,10],
-                
-            }]
-            }
+            labels: [0,0.5,1,1.5,2,2.5],
+            datasets: [{label:'Input data',backgroundColor: "rgba(0,0,255,1.0)",borderColor: "rgba(0,0,0,0)",data: [0,0.25,1,2.25,4,5.25]},{   label:'2nd Order Polynomial',backgroundColor: "rgba(0,255,0,1.0)",borderColor: "rgba(0,0,0,1)",data: [-0.10714286,0.35714286,1.14285714,2.25,3.67857143,5.42857143]}],
+            },
         });
         console.log('html')
         }
-        
     </script>
 </body>
 </html>

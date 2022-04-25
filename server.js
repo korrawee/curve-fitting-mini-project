@@ -40,49 +40,24 @@ app.get('^/$|/index(.html)?', (req,res) => {
     // res.sendFile('./views/index.html', {root: __dirname});
     const math = require('mathjs');
     const my_path = path.join(__dirname, 'views', 'index.html');
-    fs.readFile(my_path, 'utf8', (err,data) => {
-        if(err) next();
-        
-        // Example data
-        let my_data = [
-            {x:0,y:1},
-            {x:1,y:1.5},
-            {x:2,y:2},
-            {x:3,y:5},
-            {x:4,y:10},
-            {x:5,y:10},
-        ]
-        let x_data, y_data;
-        let matrix_data;
-        
-        // Parse x and y to arrays
-        x_data = my_data.map((point) => {
-            return point["x"];
-        });
-        y_data = my_data.map((point) => {
-            return point["y"];
-        });
-
-        // matrix_data = math.matrix([x_data,y_data]);
-
-        data = data.replace(/data: \[.*/g, `data: [${String(y_data)}],` );
-        data = data.replace(/labels: \[.*/g, `labels: [${String(x_data)}],`);
-        fs.writeFile(my_path, data, 'utf8', function (err) {
-            if (err) return console.log(err);
-
-        });
-        console.log(data);
-    });
 
     res.sendFile( my_path );
 });
 app.post('^/$|/index(.html)?', (req,res) => {
 
     const my_path = path.join(__dirname, 'views', 'index.html');
+    
     fs.readFile(my_path, 'utf8', (err,data) => {
+        const {getResult} = require('./javascripts/equation.js');  
+
         if(err) next();
-        
-        data = data.replace(/data: \[.*/g, `data: [${String(req.body["data"])}],` );
+
+        let req_data = req.body["data"];
+        let arrResult = getResult(req_data);
+        let datasets = `[{label:'Input data',backgroundColor: "rgba(0,0,255,1.0)",borderColor: "rgba(0,0,0,0)",data: [${arrResult[3]}]},{   label:'2nd Order Polynomial',backgroundColor: "rgba(0,255,0,1.0)",borderColor: "rgba(0,0,0,1)",data: [${arrResult[1]}]}]`
+        data = data.replace(/datasets: \[.*/g, `datasets: ${String(datasets)},` );
+        data = data.replace(/labels: \[.*/g, `labels: [${String(arrResult[0])}],`);
+
         fs.writeFile(my_path, data, 'utf8', function (err) {
             if (err) return console.log(err);
         
