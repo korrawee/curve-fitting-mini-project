@@ -677,3 +677,27 @@
 }
 20220425	13:33:10	c92956cc-669a-415e-b0ef-7331b4602de5	TypeError: Cannot read properties of undefined (reading 'req')
 20220425	13:33:12	a943b96d-ee34-41b1-9f06-da13370e1dda	TypeError: Cannot read properties of undefined (reading 'req')
+20220428	11:44:00	41b2d415-b158-4145-a0ee-356ed9f5c805	ReferenceError: getpolynomials is not defined
+20220428	11:44:21	49cd5005-95b5-4641-bcec-10e37fe693ca	ReferenceError: Cannot access 'data_x' before initialization
+20220428	11:46:15	09107e3a-2c7b-48ca-85b8-4994745af766	TypeError: Cannot read properties of undefined (reading 'then')
+20220428	13:06:33	3d971171-cce4-455f-b404-12ffa4199370	ReferenceError: socket is not defined
+20220428	13:06:45	1d9b71f5-e3cc-4f6a-b761-016b77540b8e	ReferenceError: socket is not defined
+20220428	13:06:46	50bcbed5-74fb-408b-8cf6-430df9a4a3af	ReferenceError: socket is not defined
+20220428	13:06:47	7e65ec47-2929-42d3-8c5e-5b74f815a5ae	ReferenceError: socket is not defined
+20220428	13:06:48	e2917b8f-dea6-47f5-81f9-b3c065a45410	ReferenceError: socket is not defined
+20220428	13:08:28	893fd9ad-bbf8-404b-8777-0f4dc247ec97	ReferenceError: socket is not defined
+20220428	13:08:29	d8062677-1657-460d-930c-e11dd6f7b688	ReferenceError: socket is not defined
+20220428	13:08:54	7e056547-99fc-40ce-9e5d-2e60eec2fb15	ReferenceError: socket is not defined
+20220428	13:08:55	0c543ee7-64fc-44a7-b425-e4c82b14896c	ReferenceError: socket is not defined
+20220428	13:19:41	59abe0c7-82f3-41c7-830c-bf8af90a2555	ReferenceError: socket is not defined
+20220428	13:19:42	916e1a1d-e79d-43c5-8c1b-5b6fbf0b6e74	ReferenceError: socket is not defined
+20220428	13:19:43	51592f74-2651-4a15-8c4b-a44911429965	ReferenceError: socket is not defined
+20220428	13:23:25	c07609a4-5edd-4b43-881f-5c646932db4e	TypeError: io.on is not a function
+20220428	13:25:44	bacfd401-f627-4a86-8d7c-027451f21830	Error: Listen method has been called more than once without closing.
+20220428	13:28:41	49ec98ad-d51e-4769-a693-33984c02d64f	TypeError: io.on is not a function
+20220428	13:34:44	f05a7d6f-ffb0-4651-83d7-e43c7bbcced2	TypeError: io is not a function
+20220428	14:13:49	5eaefb69-7c9a-4a22-957d-8bb614851f71	SyntaxError: Unexpected identifier
+20220428	14:14:09	73351500-c942-4621-ae1f-bfa57833ed9d	SyntaxError: Unexpected identifier
+20220428	14:14:10	bfb70ac1-1680-4a75-aaf5-237b30528603	SyntaxError: Unexpected identifier
+20220428	14:15:33	45f251b5-7b92-4b12-b74d-8d82f699cf09	SyntaxError: Unexpected identifier
+20220428	22:56:40	e5600ed1-9696-4b01-bb4f-1a2eb7ec008a	RangeError: Invalid array length

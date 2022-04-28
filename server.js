@@ -1,5 +1,8 @@
 const express = require('express');
 const app = express();
+const http = require('http').Server(app);
+
+const io = require('socket.io')(http);
 const cors = require('cors');
 const path = require('path');
 const fs = require('fs');
@@ -9,11 +12,14 @@ const { sendFile } = require('express/lib/response');
 const PORT = process.env.PORT || 3500;
 
 
+// ---------------------------------------------------
+// Express configurations
+
 // custom middleware logger
 app.use(logger);
 
 // Cross Origin Resource Sharing
-const whitelist = ['https://www.google.com','http://127.0.0.1:5500', 'http://localhost:3500']
+const whitelist = ['https://www.google.com','http://127.0.0.1:5500', `http://localhost:${PORT}`]
 const corsOptions = {
     origin: (origin, callback) => {
         if (whitelist.indexOf(origin) !== -1 || !origin){
@@ -36,35 +42,34 @@ app.use(express.json());
 // server static files
 app.use(express.static(__dirname + '/public'));
 
+// ---------------------------------------------------
+// Route Handler
 app.get('^/$|/index(.html)?', (req,res) => {
     // res.sendFile('./views/index.html', {root: __dirname});
     const math = require('mathjs');
     const my_path = path.join(__dirname, 'views', 'index.html');
-
+    
     res.sendFile( my_path );
 });
 app.post('^/$|/index(.html)?', (req,res) => {
 
     const my_path = path.join(__dirname, 'views', 'index.html');
-    
-    fs.readFile(my_path, 'utf8', (err,data) => {
-        const {getResult} = require('./javascripts/equation.js');  
+    const {getpolynomials} = require('./public/javascripts/equation.js');  
+    //  Parse string data to array of data_x and data_y
+    let data_x = req.body["data-x"].split(',').map(x => parseFloat(x.trim()));
+    let data_y = req.body["data-y"].split(',').map(y => parseFloat(y.trim()));
+    let arrResult = getpolynomials(data_x, data_y);
 
-        if(err) next();
-
-        let req_data = req.body["data"];
-        let arrResult = getResult(req_data);
-        let datasets = `[{label:'Input data',backgroundColor: "rgba(0,0,255,1.0)",borderColor: "rgba(0,0,0,0)",data: [${arrResult[3]}]},{   label:'2nd Order Polynomial',backgroundColor: "rgba(0,255,0,1.0)",borderColor: "rgba(0,0,0,1)",data: [${arrResult[1]}]}]`
-        data = data.replace(/datasets: \[.*/g, `datasets: ${String(datasets)},` );
-        data = data.replace(/labels: \[.*/g, `labels: [${String(arrResult[0])}],`);
-
-        fs.writeFile(my_path, data, 'utf8', function (err) {
-            if (err) return console.log(err);
-        
+    console.log(arrResult);
+    // Socket.io
+    io.on('connection', function(socket) {
+        console.log('A user connected');
+        io.emit('data', arrResult);
+        //Whenever someone disconnects this piece of code executed
+        socket.on('disconnect', function () {
+        console.log('A user disconnected');
         });
-        console.log(data);
     });
-
     res.redirect(req.get('referer'));
 });
 
@@ -76,30 +81,6 @@ app.get('/old-page(.html)?', (req,res) => {
     res.redirect( 301, '/new-page.html');
 });
 
-    // Route handler
-app.get("/hello(.html)?", (req,res, next) => {
-    console.log('attempted to load hello.html');
-    next()
-}, (req,res) => {
-    res.send("Hello world");
-})
-
-    // Chaining oute handlers
-const one = (req,res, next) => {
-    console.log("one");
-    next();
-}
-const two = (req,res, next) => {
-    console.log("two");
-    next();
-}
-const three = (req,res) => {
-    console.log("three");
-    res.send('Finished!');
-}
-
-app.get('/chain(.html)?', [one, two, three]);
-
 app.all('*', (req, res) =>{
     res.status(404);
     if(req.accepts('html')) {
@@ -110,7 +91,11 @@ app.all('*', (req, res) =>{
         res.type('txt').send('"404 Not Found"');
     }
 });
+// ---------------------------------------------------
+
+
 
 app.use(errorHandler);
 
-app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+
+http.listen(PORT, () => console.log(`Server running on port ${PORT}`));
