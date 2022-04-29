@@ -1,3 +1,4 @@
+const { matrix } = require('mathjs');
 const math = require('mathjs');
 
 const find_eqn = (sample_data, order) => { // sample_data => [ [],[] ]
@@ -31,16 +32,19 @@ const find_eqn = (sample_data, order) => { // sample_data => [ [],[] ]
     }
 
     //  Convert array to matrix
+    let decimal = 5;
     console.log("\nMatrix Left: \n",matrix_left);
     matrix_left = math.matrix(matrix_left);
     matrix_right = math.matrix(matrix_right);
+    matrix_right["_data"] = matrix_right["_data"].map( inner => Number(inner.toFixed(decimal)))
     //  Invert left matrix
     matrix_left = math.inv(matrix_left);
-    
+    matrix_left["_data"] = matrix_left["_data"].map(outer => outer.map(inner => Number(inner.toFixed(decimal))));
     console.log("\nMatrix Left INV: \n",matrix_left);
     console.log("\nMatrix Right: \n",matrix_right);
     //  Find unknow variables from [matrix_left]^-1 * [matrix_right]
     let constants = math.multiply(matrix_left,matrix_right)["_data"];
+    constants = constants.map( inner => Number(inner.toFixed(decimal)))
     console.log("\nAfter Multiply: \n",constants);
     
     //  Construct function from constants 
@@ -51,29 +55,47 @@ const find_eqn = (sample_data, order) => { // sample_data => [ [],[] ]
         }
         else {
             let tmp = constants[i] >= 0 ? `+ ${constants[i]}` : String(constants[i]);
-            fx += ` ${tmp} * (x ** ${i})` ;
+            fx += ` + ( ${tmp} * math.pow(x,${i}) )` ;
         }
     }
     console.log(`\nEquation: ${fx}`);
     return fx;
 };
 
-const generateData = (value, i1, i2, step = 1) => {
+const generateData = (eqn, data_x) => {
+
     let yValues = new Array(), xValues = new Array();
     let res = new Array();
 
-    for (let x = i1; x <= i2; x += step) {
-        yValues.push(math.round(eval(value),8));
+    for (let i = 0; i < data_x.length; i ++ ) {
+        let x = data_x[i];
+        yValues.push(math.round(eval(eqn),2));
         xValues.push(x);
     }
 
     res.push(xValues);
     res.push(yValues);
 
-    return res ;
+    return res ;    //  [x,y]
 }
 
 
+const error = ( input1 , input2 ) =>{
+    err = 0;
+    try{
+        if(input1.length !== input2.length){
+            throw("Error: Length Not Equal");
+        }else{
+            for (let i =0 ; i < input1.length ; i++){
+                err += Math.pow(input1[i] - input2[i], 2) // ผลรวม ของ ผลต่าง y 2 ตัว
+            }
+            err = math.round(err / input1.length, 3);
+        }
+    }catch (error) {
+        alert("Error: " + error);
+    }
+    return err;
+}
 
 exports.getpolynomials = (array_x, array_y, order = 1) =>{
     // let sample = [[0, 0.5, 1.0, 1.5, 2.0, 2.5],[0, 0.25, 1.0, 2.25, 4.0, 6.25]];
@@ -101,10 +123,16 @@ exports.getpolynomials = (array_x, array_y, order = 1) =>{
     console.log(dataAll);
 
     const eqn = find_eqn(dataAll, order);
-    const result = generateData(eqn, dataX[0], dataX[dataX.length-1], dataX[1] - dataX[0]);
-    
-    return [...result, dataX, dataY] ;
+    const result = generateData(eqn, dataX);
+
+    console.log('error: ',error(dataY, result[1]));
+
+    return [eqn,...result] ;    // [eqn, gen_data_y]
 }
+
+
+
+    
 // data = '[[0, 0.5, 1.0, 1.5, 2.0, 2.5],[0, 0.25, 1.0, 2.25, 4.0, 5.25]]';
 // console.log(getResult1(data));
 
