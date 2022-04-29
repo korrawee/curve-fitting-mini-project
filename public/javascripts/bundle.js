@@ -17716,6 +17716,7 @@ const {io} = require('socket.io/client-dist/socket.io');
 const Chart = require('chart.js');
 var data_x = new Array(1);
 var data_y = new Array(2);
+var myChart ;
 
 io().on('data', (data) =>{
     console.log(data);
@@ -17732,7 +17733,7 @@ io().on('data', (data) =>{
       chartStatus.destroy();
     }
 
-    let myChart = new Chart("myChart", {
+    myChart = new Chart("myChart", {
         type: "line",
         data: {
             labels: data_x[0],
@@ -17750,8 +17751,22 @@ io().on('data', (data) =>{
                 }
             ],
         },
+        options: {
+            animation: {
+                onComplete: done
+              }
+        }
     });
+    function done(){
+        const dw = document.getElementById("btn-download") ; 
+        var image = myChart.toBase64Image();
+        dw.download = 'chart.png';
+        dw.href = image ;
+    }
 });
+
+
+
 
 
 //  listening to server
