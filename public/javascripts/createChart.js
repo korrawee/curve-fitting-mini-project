@@ -3,6 +3,15 @@ const Chart = require('chart.js');
 var data_x = new Array(1);
 var data_y = new Array(2);
 var myChart ;
+if (document.getElementById("dw-btn") === null ){
+    const div = document.getElementById("dw") ;
+    const dw = document.createElement("button") ; 
+    dw.id = "dw-btn" ;
+    dw.innerHTML = "Download"
+    var a = document.createElement('a');
+    a.appendChild(dw) ;
+    div.appendChild(a) ;
+}
 
 io().on('data', (data) =>{
     console.log(data);
@@ -44,16 +53,10 @@ io().on('data', (data) =>{
         }
     });
     function done(){
-        const dw = document.getElementById("btn-download") ; 
-        var image = myChart.toBase64Image();
-        dw.download = 'chart.png';
-        dw.href = image ;
+        a.download = 'chart.png';
+        a.href = myChart.toBase64Image(); ; 
     }
 });
-
-
-
-
 
 //  listening to server
 

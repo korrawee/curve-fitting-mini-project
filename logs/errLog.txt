@@ -732,3 +732,6 @@ Require stack:
 20220429	21:32:14	5a0c3686-3a15-4616-8c65-89752d5ada14	ReferenceError: myChart is not defined
 20220429	21:36:41	0f590cf5-37a3-4a10-ba39-3700105d3ac8	ReferenceError: myChart is not defined
 20220429	21:38:01	471519b2-054b-4e82-8729-cc705bc3098a	Error: Cannot calculate inverse, determinant is zero
+20220429	22:52:42	bad0ef26-b2a0-4e60-b3af-8eecf18f25de	ReferenceError: alert is not defined
+20220429	22:58:14	f1084e08-00fd-4786-865a-c445c71fab7e	ReferenceError: alert is not defined
+20220429	22:58:20	bcd92f53-da47-4fc9-835c-1f700b74b4d6	ReferenceError: alert is not defined
