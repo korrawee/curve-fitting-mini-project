@@ -1,4 +1,4 @@
 require
 npm i socket.io
 
-run with npm run-script dev
+run with "npm run-script dev"
