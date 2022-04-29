@@ -701,3 +701,25 @@
 20220428	14:14:10	bfb70ac1-1680-4a75-aaf5-237b30528603	SyntaxError: Unexpected identifier
 20220428	14:15:33	45f251b5-7b92-4b12-b74d-8d82f699cf09	SyntaxError: Unexpected identifier
 20220428	22:56:40	e5600ed1-9696-4b01-bb4f-1a2eb7ec008a	RangeError: Invalid array length
+20220428	23:33:37	0b7b3ab1-fe1c-468d-b746-b4cf3f427ad8	RangeError: Invalid array length
+20220428	23:40:36	b910fc0f-be1f-4a98-b991-807f891f5f0d	ReferenceError: each_element is not defined
+20220428	23:40:38	7b0bd255-a44d-4743-8101-fc639ebe0c40	ReferenceError: each_element is not defined
+20220428	23:42:49	755011a7-1c6e-44c8-9629-993fbe8c7f0e	TypeError: row.map is not a function
+20220428	23:43:51	4dbd3474-63a1-4b6c-8750-3e11f182b8eb	SyntaxError: Unexpected identifier
+20220428	23:44:25	5d949367-58db-46ee-87c9-2d4bdb48cd70	SyntaxError: Unexpected identifier
+20220428	23:44:26	b69752eb-afe9-454e-93f1-4491be54b306	SyntaxError: Unexpected identifier
+20220428	23:44:28	0eff480c-c2a7-418c-982c-53c3c59095be	SyntaxError: Unexpected identifier
+20220428	23:44:40	8b324ec0-0be9-488b-90d4-bf20cdca71fe	TypeError: Cannot read properties of undefined (reading 'map')
+20220428	23:49:20	03416d43-09eb-4c81-83d4-21891c836d6b	TypeError: Unexpected type of argument in function conj (expected: number or Complex or BigNumber or Array or Matrix or Fraction or string or boolean, actual: undefined, index: 0)
+20220428	23:50:23	ac49cbf0-b433-4c73-a774-4beefbbc1379	TypeError: Unexpected type of argument in function conj (expected: number or Complex or BigNumber or Array or Matrix or Fraction or string or boolean, actual: undefined, index: 0)
+20220428	23:51:40	d64fc994-e826-4047-972b-f5f18c3ea552	TypeError: Unexpected type of argument in function conj (expected: number or Complex or BigNumber or Array or Matrix or Fraction or string or boolean, actual: undefined, index: 0)
+20220428	23:53:20	c7067991-b837-40cb-add3-084fbf4d257d	Error: Cannot find module 'math.js'
+Require stack:
+- /Users/korraweesomyos/Dev/javascript/numer/public/javascripts/equation.js
+- /Users/korraweesomyos/Dev/javascript/numer/server.js
+20220428	23:53:27	c817990a-89c2-430f-802a-530198f24fb0	TypeError: Unexpected type of argument in function conj (expected: number or Complex or BigNumber or Array or Matrix or Fraction or string or boolean, actual: undefined, index: 0)
+20220428	23:53:45	d2326029-f428-4b5f-9a53-94841c9eb86d	TypeError: Cannot read properties of undefined (reading '0')
+20220428	23:54:02	fa4636e9-c65c-4b6c-8ed0-7b9071dad49d	TypeError: Cannot read properties of undefined (reading '0')
+20220428	23:55:12	38750dee-2f1f-4a31-8506-17773ec10b86	TypeError: Cannot read properties of undefined (reading '0')
+20220429	00:00:23	351e9930-6727-40d3-9485-bc86d1e939a7	TypeError: outer.map is not a function
+20220429	00:27:50	7bdeaab2-0159-40ba-a02d-8e86759d7c5a	RangeError: Invalid array length

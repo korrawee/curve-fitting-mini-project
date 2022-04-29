@@ -58,13 +58,14 @@ app.post('^/$|/index(.html)?', (req,res) => {
     //  Parse string data to array of data_x and data_y
     let data_x = req.body["data-x"].split(',').map(x => parseFloat(x.trim()));
     let data_y = req.body["data-y"].split(',').map(y => parseFloat(y.trim()));
-    let arrResult = getpolynomials(data_x, data_y);
+    let order = parseInt(req.body["data-order"]);
+    let arrResult = getpolynomials(data_x, data_y, order);     // [eqn, dataset]
 
-    console.log(arrResult);
+    console.log('result =>\t',arrResult);
     // Socket.io
     io.on('connection', function(socket) {
         console.log('A user connected');
-        io.emit('data', arrResult);
+        io.emit('data', [[data_x,data_y], arrResult]);
         //Whenever someone disconnects this piece of code executed
         socket.on('disconnect', function () {
         console.log('A user disconnected');

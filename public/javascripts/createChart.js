@@ -1,21 +1,23 @@
 const {io} = require('socket.io/client-dist/socket.io');
 const Chart = require('chart.js');
-var data_x = new Array(2);
+var data_x = new Array(1);
 var data_y = new Array(2);
 
 io().on('data', (data) =>{
     console.log(data);
-    data_x[0] = [...data[0]];
-    data_x[1] = [...data[2]];
-    data_y[0] = [...data[1]];
-    data_y[1] = [...data[3]];
+    let given_data = [...data[0]];
+    let gen_data = [...data[1]];
+
+    data_x[0] = [...given_data[0]]; // old data
+    data_y[0] = [...given_data[1]]; // old data
+    data_y[1] = [...gen_data[2]];   // generate data (y)
     
     let chartStatus = Chart.getChart("myChart"); // <canvas> id
     console.log(chartStatus);
     if (chartStatus != undefined) {
       chartStatus.destroy();
     }
-    
+
     let myChart = new Chart("myChart", {
         type: "line",
         data: {
