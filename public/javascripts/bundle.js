@@ -17717,18 +17717,9 @@ const Chart = require('chart.js');
 var data_x = new Array(1);
 var data_y = new Array(2);
 var myChart ;
-if (document.getElementById("dw-btn") === null ){
-    const div = document.getElementById("dw") ;
-    const dw = document.createElement("button") ; 
-    dw.id = "dw-btn" ;
-    dw.innerHTML = "Download"
-    var a = document.createElement('a');
-    a.appendChild(dw) ;
-    div.appendChild(a) ;
-}
 
 io().on('data', (data) =>{
-    console.log(data);
+    console.log("Get Data: \t",data);
     let given_data = [...data[0]];
     let gen_data = [...data[1]];
 
@@ -17738,6 +17729,18 @@ io().on('data', (data) =>{
     
     let chartStatus = Chart.getChart("myChart"); // <canvas> id
     console.log(chartStatus);
+
+    if (document.getElementById("dw-btn") === null){
+        console.log("Create download-btn");
+        const div = document.getElementById("dw") ;
+        const dw = document.createElement("button") ; 
+        dw.id = "dw-btn" ;
+        dw.innerHTML = "Download"
+        var a = document.createElement('a');
+        a.appendChild(dw) ;
+        div.appendChild(a) ;
+    }
+
     if (chartStatus != undefined) {
       chartStatus.destroy();
     }
@@ -17767,8 +17770,14 @@ io().on('data', (data) =>{
         }
     });
     function done(){
-        a.download = 'chart.png';
-        a.href = myChart.toBase64Image(); ; 
+        try{
+            a.download = 'chart.png';
+            a.href = myChart.toBase64Image(); ; 
+        }
+        catch (err) {
+            console.log("download-btn:\t",err)
+        }
+       
     }
 });
 

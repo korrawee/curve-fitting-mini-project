@@ -10,13 +10,23 @@
 </head>
 <body>
     <h1>Index</h1>
+    <form action="/upload" method="get">
+        Upload .csv file?
+        <br/>
+        <input type="file" id="uploaded_data">
+        <input type="text" id="txt">
+        <br/>
+        <button type="upload-btn" type="submit">Display Data</button>
+      </form>
+    
     <form action="/" method="post">
         <label for="data">Enter your X data:</label>
         <input type="text" id="data-x" name="data-x">
         <label for="data">Enter your Y data:</label>
         <input type="text" id="data-y" name="data-y">
-        <label for="data">Enter your order data:</label> 
 
+        </br>
+        <label for="data">Enter your order data:</label> 
         <select name="data-order" id="data-order">
             <option value="1">First Order</option>
             <option value="2">Second Order</option>
@@ -28,7 +38,6 @@
             <option value="8">Eight Order</option>
             <option value="9">Nine Order</option>
           </select>
-
         <button id='btn1' type="submit">Submit</button>
       </form>
         <div id="dw"></div>

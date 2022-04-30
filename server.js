@@ -48,9 +48,9 @@ app.get('^/$|/index(.html)?', (req,res) => {
     // res.sendFile('./views/index.html', {root: __dirname});
     const math = require('mathjs');
     const my_path = path.join(__dirname, 'views', 'index.html');
-    
     res.sendFile( my_path );
 });
+
 app.post('^/$|/index(.html)?', (req,res) => {
 
     const my_path = path.join(__dirname, 'views', 'index.html');
@@ -72,6 +72,12 @@ app.post('^/$|/index(.html)?', (req,res) => {
         });
     });
     res.redirect(req.get('referer'));
+});
+
+app.get('^/$|/upload(.html)?', (req,res) => {
+    let txt = req.body["uploaded_data"];
+    res.sendFile( path.join(__dirname, 'views', 'upload.html') );
+    console.log("Get : ",txt)
 });
 
 app.get('/new-page(.html)?', (req,res) => {

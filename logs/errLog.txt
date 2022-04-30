@@ -735,3 +735,9 @@ Require stack:
 20220429	22:52:42	bad0ef26-b2a0-4e60-b3af-8eecf18f25de	ReferenceError: alert is not defined
 20220429	22:58:14	f1084e08-00fd-4786-865a-c445c71fab7e	ReferenceError: alert is not defined
 20220429	22:58:20	bcd92f53-da47-4fc9-835c-1f700b74b4d6	ReferenceError: alert is not defined
+20220430	23:11:02	f1a33239-9d5d-4fe1-a25a-4f0b41797aa5	TypeError: Cannot read properties of undefined (reading 'split')
+20220430	23:11:18	f54b7bbc-594c-4a00-b0eb-ebf21ae3ad4a	TypeError: Cannot read properties of undefined (reading 'split')
+20220430	23:11:26	af51ff1d-c398-47c9-9837-d0d00ea81de6	TypeError: Cannot read properties of undefined (reading 'split')
+20220430	23:28:24	c550f6f7-b5af-47c0-801c-a8525dcabb9f	ReferenceError: text is not defined
+20220430	23:28:39	a0a82b21-3649-407e-9402-4c8947053018	ReferenceError: text is not defined
+20220430	23:31:09	ffa87c8a-cc47-4c7c-99cb-ebe6bf75a171	TypeError: Cannot read properties of undefined (reading 'map')
