@@ -1,13 +1,14 @@
 const {io} = require('socket.io/client-dist/socket.io');
 const Chart = require('chart.js');
-var data_x = new Array(1);
-var data_y = new Array(2);
+
 var myChart ;
 
-io().on('data', (data) =>{
+io().on('data', (data) =>{                  //  data[0] = sample_data, data[1] = {eqn1: [data_x1,data_y1], eqn2: [data_x2,data_y2]}
     console.log("Get Data: \t",data);
-    let given_data = [...data[0]];
-    let gen_data = [...data[1]];
+    let given_data = data[0];
+    data[1]["given"] = given_data[1];       // add given data y to json 
+    let result_data = data[1];
+
     // console.log("given_data: ",given_data)
     // console.log("gen_data: ",gen_data[3])
 
@@ -34,9 +35,8 @@ io().on('data', (data) =>{
     err.innerHTML = `Error: ${errVal}` ;
     dis.appendChild(eqa) ;
     dis.appendChild(err) ;
-
+    
     if (document.getElementById("dw-btn") === null){
-        console.log("Create download-btn");
         const div = document.getElementById("dw") ;
         const dw = document.createElement("button") ; 
         dw.id = "dw-btn" ;
@@ -45,28 +45,18 @@ io().on('data', (data) =>{
         a.appendChild(dw) ;
         div.appendChild(a) ;
     }
-
+    
     if (chartStatus != undefined) {
-      chartStatus.destroy();
+        chartStatus.destroy();
     }
+    
+    let result_datasets = getDatasets(result_data);
 
     myChart = new Chart("myChart", {
         type: "line",
         data: {
-            labels: data_x[0],
-            datasets: [
-                {
-                    label:'Input data',
-                    backgroundColor: "rgba(0,0,255,1.0)",
-                    borderColor: "rgba(0,0,0,0)",
-                    data: data_y[0]
-                },{   
-                    label:'2nd Order Polynomial',
-                    backgroundColor: "rgba(0,255,0,1.0)",
-                    borderColor: "rgba(0,0,0,1)",
-                    data: data_y[1]
-                }
-            ],
+            labels: given_data[0],  //  data x 
+            datasets: result_datasets,
         },
         options: {
             animation: {
@@ -88,4 +78,41 @@ io().on('data', (data) =>{
 
 //  listening to server
 
+const getDatasets = (data) => {
+    let order = {1:"1st", 2:"2nd", 3:"3rd", 
+                    4:"4th", 5:"5th", 6:"6th", 
+                    7:"7th", 8:"8th", 9:"9th"};
+    let result_keys = Object.keys(data);
+    let datasets = new Array();
 
+    result_keys.map((key,i) => {
+        if(key === "given") {   // push given data to first elem.
+            let d = {
+                label: key,
+                backgroundColor: "rgba(0,0,255,1.0)",
+                borderColor: "rgba(0,0,255,1)",
+                data: data[key]
+            } 
+            datasets.unshift(d)
+        }else{
+            let color = getRandomColor();
+            let d = {
+                label:`${order[i+1]} order`,
+                backgroundColor: color,
+                borderColor: color,
+                data: data[key][1]
+            } 
+            datasets.push(d);
+        }
+    });
+    return datasets;
+};
+
+const getRandomColor = () => {
+    var letters = '0123456789ABCDEF';
+    var color = '#';
+    for (var i = 0; i < 6; i++) {
+      color += letters[Math.floor(Math.random() * 16)];
+    }
+    return color;
+  }

@@ -33,6 +33,7 @@ const find_eqn = (sample_data, order) => { // sample_data => [ [],[] ]
 
     //  Convert array to matrix
     let decimal = 5;
+
     console.log("\nMatrix Left: \n",matrix_left);
     matrix_left = math.matrix(matrix_left);
     matrix_right = math.matrix(matrix_right);
@@ -92,49 +93,44 @@ const error = ( input1 , input2 ) =>{
             err = math.round(err / input1.length, 3);
         }
     }catch (error) {
-       console.log("Error: " + error);
+        console.log("Error: " + error);
     }
     return err;
 }
 
-exports.getpolynomials = (array_x, array_y, order = 1) =>{
-    // let sample = [[0, 0.5, 1.0, 1.5, 2.0, 2.5],[0, 0.25, 1.0, 2.25, 4.0, 6.25]];
-    let dataX, dataY, dataAll;
-    // // Convert string of 2darray to dataX and dataY arrays
-    // dataSplit = data.split(',')
-    // dataSplit[0] = dataSplit[0].slice(2);
-    // dataSplit[dataSplit.length-1] = dataSplit[dataSplit.length-1].slice(0,-2);
-    // dataSplit[dataSplit.length/2] = dataSplit[dataSplit.length/2].slice(1);
-    // dataSplit[(dataSplit.length/2)-1] = dataSplit[(dataSplit.length/2)-1].slice(0,-1);
-    // dataSplit = dataSplit.map(x => {
-    //     return parseFloat(x.replace(/^\s+|\s+$/g, ''));
-    // });
-    // console.log("HERE ",dataSplit);
-    // dataX = dataSplit.slice(0, (dataSplit.length/2));
-    // dataY = dataSplit.slice(dataSplit.length/2);
-    // dataX = dataSplit.slice(0, (dataSplit.length/2));
+const getArrayEquations = (sample_data, order) => {
+    let array_equation = new Array();
 
-    dataX = array_x;
-    dataY = array_y;
+    for (let i = 1 ; i <= order ; i++){
+        array_equation.push( find_eqn(sample_data, i) );
+    }
+
+    return array_equation;
+}
+
+exports.getpolynomials = (array_x, array_y, order = 1) =>{
+    let dataX, dataY, dataAll;
+    let result = {};
+    dataX = [...array_x];
+    dataY = [...array_y];
     dataAll = [dataX, dataY] ;
 
     // console.log("dataX: \t",dataX);
     // console.log("dataY: \t",dataY);
     // console.log(dataAll);
 
-    const eqn = find_eqn(dataAll, order);
-    const result = generateData(eqn, dataX);
+    const equations = getArrayEquations(dataAll, order);
+    
+    equations.map((eqn)=>{
+        result[eqn] = generateData(eqn, dataX);
+    });
 
-    err = error(dataY, result[1]) ;
-    console.log('error: ',err);
-    return [eqn,...result,err] ;    // [eqn, gen_data_y]
+    console.log(result);
+
+    return result ;    // = {eqn1: [data_x1,data_y1], eqn2: [data_x2,data_y2]}
 }
 
-
-
-    
-// data = '[[0, 0.5, 1.0, 1.5, 2.0, 2.5],[0, 0.25, 1.0, 2.25, 4.0, 5.25]]';
-// console.log(getResult1(data));
-
+// SAMPLE DATA
+// [[0, 0.5, 1.0, 1.5, 2.0, 2.5],[0, 0.25, 1.0, 2.25, 4.0, 5.25]]
 // [[0 ,0.0 ,1 ,1.5 ,2 ,2.5],[0.06, -0.91, 1.62, 3.07, 3.35, 7.94]]
 // [[0, 0.5, 1, 1.5, 2, 2.5],[0.0674, -0.9156, 1.6253, 3.0377, 3.3535, 7.9409]]
