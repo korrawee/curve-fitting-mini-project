@@ -741,3 +741,26 @@ Require stack:
 20220430	23:28:24	c550f6f7-b5af-47c0-801c-a8525dcabb9f	ReferenceError: text is not defined
 20220430	23:28:39	a0a82b21-3649-407e-9402-4c8947053018	ReferenceError: text is not defined
 20220430	23:31:09	ffa87c8a-cc47-4c7c-99cb-ebe6bf75a171	TypeError: Cannot read properties of undefined (reading 'map')
+20220501	08:09:53	e75b01f2-fdd6-4edf-bfdb-d1e43bbef6f4	TypeError: Callback must be a function. Received 'utf8'
+20220501	08:10:31	2405b042-5394-4e49-88b7-487e98693376	TypeError: Callback must be a function. Received 'utf8'
+20220501	08:12:07	e33f9a3d-a62a-4f78-bacb-70fae1b09d27	TypeError: Cannot read properties of undefined (reading 'uploaded_data')
+20220501	08:12:25	38358f72-df0c-49f6-a896-0852fd46a5fe	TypeError: req.getElementById is not a function
+20220501	08:12:59	fe60b568-e6e4-46e2-899c-4ae6dd86b327	TypeError: Callback must be a function. Received 'utf8'
+20220501	08:23:10	25fe526a-311e-4d72-a821-001cfedaaaa1	TypeError: Cannot read properties of undefined (reading 'type')
+20220501	08:29:46	8cb4e02b-5ca5-4e16-bdb3-6a516cb6eeaf	MulterError: Unexpected field
+20220501	08:30:26	7679c2f5-ac1a-4ce3-ab66-a2c0876a5ee5	MulterError: Unexpected field
+20220501	08:37:39	73e419c6-12b2-420f-b649-65557bf81a5b	MulterError: Unexpected field
+20220501	08:40:00	8e1dba46-fbb3-4255-8535-2d8a119fe416	MulterError: Unexpected field
+20220501	08:40:58	5181a454-2e52-4d30-a766-336531ca8ed2	Error: ENOENT: no such file or directory, open 'E:\Coding\Numerical\curve-fitting-mini-project\uploads\up_data-1651369258264.csv'
+20220501	08:42:23	a1cb9036-37df-4215-bc68-f78b9485cadb	Error: ENOENT: no such file or directory, open 'E:\Coding\Numerical\curve-fitting-mini-project\uploads\up_data-1651369343349.csv'
+20220501	08:48:52	2c315601-fa0a-409e-8b19-91e55a1cf678	Error: ENOENT: no such file or directory, open 'E:\Coding\Numerical\curve-fitting-mini-project\public\uploads\up_data-1651369732660.csv'
+20220501	08:52:02	33b1a274-0779-4d5d-b4cd-fcf029ba13af	Error: ENOENT: no such file or directory, open 'E:\Coding\Numerical\curve-fitting-mini-project\public\uploads\up_data-1651369922700.csv'
+20220501	08:59:27	b22cf807-2823-4894-b4d0-ea8dcbed2cd5	Error: ENOENT: no such file or directory, open 'E:\Coding\Numerical\curve-fitting-mini-project\public\uploads\up_data-1651370367181.csv'
+20220501	09:02:08	5e216640-e97d-4a60-b148-4aeb8fc372ea	TypeError: csv.fromPath is not a function
+20220501	09:03:16	e1a3d180-444e-4936-8071-01dbe5f428c6	TypeError: csv.fromPath is not a function
+20220501	09:03:48	3a3bda77-2a3c-466a-a981-33af3fb3900c	TypeError: csv.fromPath is not a function
+20220501	09:07:51	dcfc9921-e477-4aed-90d2-ac4d24c4bd05	Error: ENOENT: no such file or directory, open 'E:\Coding\Numerical\curve-fitting-mini-project\public\uploads\up_data-1651370871039-rank.csv'
+20220501	09:08:07	5cd452af-8b4c-43a9-b2d4-e5d4c2f9784b	Error: ENOENT: no such file or directory, open 'E:\Coding\Numerical\curve-fitting-mini-project\public\uploads\up_data-1651370887227-rank.csv'
+20220501	09:11:17	7922d1e3-1d52-4b97-a1b3-c7a71d9a2625	Error: ENOENT: no such file or directory, open 'E:\Coding\Numerical\curve-fitting-mini-project\public\uploads\up_data-1651371077687-rank.csv'
+20220501	09:14:07	7f2cd400-03a2-4311-ab8b-2a66151334b3	Error: ENOENT: no such file or directory, open 'E:\Coding\Numerical\curve-fitting-mini-project\public\uploads\up_data-1651371247532-rank.csv'
+20220501	20:23:37	1c149421-6985-44c8-9ba3-df42cc55f41a	ReferenceError: alert is not defined

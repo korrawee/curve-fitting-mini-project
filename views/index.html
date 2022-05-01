@@ -10,11 +10,10 @@
 </head>
 <body>
     <h1>Index</h1>
-    <form action="/upload" method="get">
+    <form action="/upload" enctype="multipart/form-data" method="post">
         Upload .csv file?
         <br/>
-        <input type="file" id="uploaded_data">
-        <input type="text" id="txt">
+        <input type="file" name="up_data" accept='csv'>
         <br/>
         <button type="upload-btn" type="submit">Display Data</button>
       </form>
@@ -41,6 +40,7 @@
         <button id='btn1' type="submit">Submit</button>
       </form>
         <div id="dw"></div>
+        <div id="display"></div>
         <!-- <a id="btn-download" > download </a> -->
       
     <div id="messages">

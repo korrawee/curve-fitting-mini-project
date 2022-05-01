@@ -17722,13 +17722,32 @@ io().on('data', (data) =>{
     console.log("Get Data: \t",data);
     let given_data = [...data[0]];
     let gen_data = [...data[1]];
+    // console.log("given_data: ",given_data)
+    // console.log("gen_data: ",gen_data[3])
 
     data_x[0] = [...given_data[0]]; // old data
     data_y[0] = [...given_data[1]]; // old data
     data_y[1] = [...gen_data[2]];   // generate data (y)
+    eqaVal = gen_data[0] ;
+    errVal = gen_data[3] ; //error value
     
     let chartStatus = Chart.getChart("myChart"); // <canvas> id
-    console.log(chartStatus);
+
+    const dis = document.getElementById("display") ;
+
+    if ( dis.childNodes.length === 0){
+        var eqa = document.createElement("label") ;
+        var err = document.createElement("label") ;
+        eqa.id = 'eqa-txt' ;
+        err.id = "error-txt";
+    }else{
+        eqa.destroy();
+        err.destroy();
+    }
+    eqa.innerHTML =`${eqaVal}`;
+    err.innerHTML = `Error: ${errVal}` ;
+    dis.appendChild(eqa) ;
+    dis.appendChild(err) ;
 
     if (document.getElementById("dw-btn") === null){
         console.log("Create download-btn");

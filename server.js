@@ -11,7 +11,8 @@ const errorHandler  = require('./middleware/errorHandler');
 const { sendFile } = require('express/lib/response');
 const PORT = process.env.PORT || 3500;
 
-
+const multer = require('multer')
+const csv = require('fast-csv');
 // ---------------------------------------------------
 // Express configurations
 
@@ -52,7 +53,6 @@ app.get('^/$|/index(.html)?', (req,res) => {
 });
 
 app.post('^/$|/index(.html)?', (req,res) => {
-
     const my_path = path.join(__dirname, 'views', 'index.html');
     const {getpolynomials} = require('./public/javascripts/equation.js');  
     //  Parse string data to array of data_x and data_y
@@ -74,10 +74,53 @@ app.post('^/$|/index(.html)?', (req,res) => {
     res.redirect(req.get('referer'));
 });
 
-app.get('^/$|/upload(.html)?', (req,res) => {
-    let txt = req.body["uploaded_data"];
-    res.sendFile( path.join(__dirname, 'views', 'upload.html') );
-    console.log("Get : ",txt)
+const storage = multer.diskStorage({
+    destination: (req, file, callBack) => {
+        console.log("1")
+        callBack(null, './public/uploads')    
+    },
+    filename: (req, file, callBack) => {
+        try{
+            console.log("2")
+            callBack(null, file.fieldname + '-' + Date.now() + '-' + file.originalname )
+        }catch{
+            fs.mkdir(path.join(__dirname, './public/uploads'), (err) => {
+                if (err) {
+                    return console.error(err);
+                }
+                console.log('Directory created successfully!');
+            });
+        }
+    }
+})
+
+const csvFilter = ( req, file , callBack) => {
+    if(file.mimetype.includes("csv"))   {
+        console.log("3")
+        callBack(null,true);
+    }else{
+        console.log("4")
+        callBack( "Please upload only .csv files" , false );
+    }
+}
+const upload = multer({ storage: storage ,fileFileter :csvFilter });
+// const upload = multer({ dest: 'tmp/csv/' });
+
+app.post('^/$|/upload(.html)?', upload.single("up_data") , (req,res) => {
+    // console.log("Get : ",req.file.filename)
+    // res.render('show',req.file)
+    const fileRows = [];
+    let filePath = __basedir + '/public/uploads' + req.file.filename ;
+    csv.fromPath(req.file.path)
+        .on("data", function (data) {
+            fileRows.push(data);
+    })
+        .on("end", function () {
+            console.log(fileRows)
+            fs.unlinkSync(req.file.path);   
+    })
+    //res.sendFile( path.join(__dirname, 'views', 'upload.html') );
+
 });
 
 app.get('/new-page(.html)?', (req,res) => {

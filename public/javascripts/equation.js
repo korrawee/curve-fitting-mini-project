@@ -92,7 +92,7 @@ const error = ( input1 , input2 ) =>{
             err = math.round(err / input1.length, 3);
         }
     }catch (error) {
-        alert("Error: " + error);
+       console.log("Error: " + error);
     }
     return err;
 }
@@ -118,16 +118,16 @@ exports.getpolynomials = (array_x, array_y, order = 1) =>{
     dataY = array_y;
     dataAll = [dataX, dataY] ;
 
-    console.log("dataX: \t",dataX);
-    console.log("dataY: \t",dataY);
-    console.log(dataAll);
+    // console.log("dataX: \t",dataX);
+    // console.log("dataY: \t",dataY);
+    // console.log(dataAll);
 
     const eqn = find_eqn(dataAll, order);
     const result = generateData(eqn, dataX);
 
-    console.log('error: ',error(dataY, result[1]));
-
-    return [eqn,...result] ;    // [eqn, gen_data_y]
+    err = error(dataY, result[1]) ;
+    console.log('error: ',err);
+    return [eqn,...result,err] ;    // [eqn, gen_data_y]
 }
 
 
