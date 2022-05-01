@@ -76,7 +76,6 @@ const generateData = (eqn, data_x) => {
 
     res.push(xValues);
     res.push(yValues);
-
     return res ;    //  [x,y]
 }
 
@@ -123,11 +122,12 @@ exports.getpolynomials = (array_x, array_y, order = 1) =>{
     
     equations.map((eqn)=>{
         result[eqn] = generateData(eqn, dataX);
+        result[eqn].push(error(dataY,result[eqn][1]));
     });
 
     console.log(result);
 
-    return result ;    // = {eqn1: [data_x1,data_y1], eqn2: [data_x2,data_y2]}
+    return result ;    // = {eqn1: [data_x1,data_y1, err], eqn2: [data_x2,data_y2, err]}
 }
 
 // SAMPLE DATA

@@ -3,38 +3,33 @@ const Chart = require('chart.js');
 
 var myChart ;
 
-io().on('data', (data) =>{                  //  data[0] = sample_data, data[1] = {eqn1: [data_x1,data_y1], eqn2: [data_x2,data_y2]}
+io().on('data', (data) =>{                  //  data[0] = sample_data, data[1] = {eqn1: [data_x1,data_y1,err], eqn2: [data_x2,data_y2,err]}
     console.log("Get Data: \t",data);
     let given_data = data[0];
     data[1]["given"] = given_data[1];       // add given data y to json 
     let result_data = data[1];
-
-    // console.log("given_data: ",given_data)
-    // console.log("gen_data: ",gen_data[3])
-
-    data_x[0] = [...given_data[0]]; // old data
-    data_y[0] = [...given_data[1]]; // old data
-    data_y[1] = [...gen_data[2]];   // generate data (y)
-    eqaVal = gen_data[0] ;
-    errVal = gen_data[3] ; //error value
     
     let chartStatus = Chart.getChart("myChart"); // <canvas> id
 
     const dis = document.getElementById("display") ;
 
-    if ( dis.childNodes.length === 0){
-        var eqa = document.createElement("label") ;
-        var err = document.createElement("label") ;
-        eqa.id = 'eqa-txt' ;
-        err.id = "error-txt";
-    }else{
-        eqa.destroy();
+    if ( dis.childNodes.length != 0){
+        eqn.destroy();
         err.destroy();
     }
-    eqa.innerHTML =`${eqaVal}`;
-    err.innerHTML = `Error: ${errVal}` ;
-    dis.appendChild(eqa) ;
-    dis.appendChild(err) ;
+    
+    Object.keys(result_data).map((key)=> {  
+        var eqn = document.createElement("label") ;
+        var err = document.createElement("label") ;
+        eqn.id = 'eqa-txt' ;
+        err.id = "error-txt";
+
+        eqn.innerHTML =`${key}`;                            // key = equation
+        err.innerHTML = `\tError: ${result_data[key][2]}` ;   //  err value
+        dis.appendChild(eqn) ;
+        dis.appendChild(err) ;
+        dis.appendChild(document.createElement("br")) ;
+    });
     
     if (document.getElementById("dw-btn") === null){
         const div = document.getElementById("dw") ;
