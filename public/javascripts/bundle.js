@@ -17722,27 +17722,45 @@ io().on('data', (data) =>{                  //  data[0] = sample_data, data[1] =
     let given_data = data[0];
     data[1]["given"] = given_data[1];       // add given data y to json 
     let result_data = data[1];
-    
+    let expressions = {};
+
     let chartStatus = Chart.getChart("myChart"); // <canvas> id
-
     const dis = document.getElementById("display") ;
-
-    if ( dis.childNodes.length != 0){
-        eqn.destroy();
-        err.destroy();
+    
+    if ( dis.childNodes.length != 0){      //   Delete previous data in dis
+        while (dis.firstChild) {
+            dis.removeChild(dis.lastChild);
+        }
     }
     
     Object.keys(result_data).map((key)=> {  
-        var eqn = document.createElement("label") ;
+        let eqn = document.createElement("label") ;
         var err = document.createElement("label") ;
         eqn.id = 'eqa-txt' ;
         err.id = "error-txt";
-
-        eqn.innerHTML =`${key}`;                            // key = equation
-        err.innerHTML = `\tError: ${result_data[key][2]}` ;   //  err value
         dis.appendChild(eqn) ;
         dis.appendChild(err) ;
         dis.appendChild(document.createElement("br")) ;
+
+        //  Convert equation
+        if(key != "given"){
+            // key = '4 + ( -0.5 * math.pow(x,1) ) + ( + 0.5 * math.pow(x,2) )'
+            let key_pow = key.match(/math.pow\((.*?)(.*?)\)/g);
+            let tmp = "";
+            
+            key_pow.map((key_pow,i)=>{
+            // key = key.replace(key_pow,`x<sup>${i+1}</sup>`);
+            if(tmp ===""){
+                tmp = key.replace(key_pow,`x<sup>${i+1}</sup>`);   
+            }else{
+                tmp = tmp.replace(key_pow,`x<sup>${i+1}</sup>`);   
+            }
+        });
+            expressions[key] = tmp;
+            eqn.innerHTML =`${expressions[key]}`;                            // key = equation
+            err.innerHTML = `\tError: ${result_data[key][2]}` ;   //  err value
+        }
+        
     });
     
     if (document.getElementById("dw-btn") === null){
@@ -17750,9 +17768,10 @@ io().on('data', (data) =>{                  //  data[0] = sample_data, data[1] =
         const dw = document.createElement("button") ; 
         dw.id = "dw-btn" ;
         dw.innerHTML = "Download"
-        var a = document.createElement('a');
-        a.appendChild(dw) ;
-        div.appendChild(a) ;
+        const dl = document.createElement('a');
+        dl.id = "download-btn"
+        dl.appendChild(dw) ;
+        div.appendChild(dl) ;
     }
     
     if (chartStatus != undefined) {
@@ -17775,8 +17794,9 @@ io().on('data', (data) =>{                  //  data[0] = sample_data, data[1] =
     });
     function done(){
         try{
-            a.download = 'chart.png';
-            a.href = myChart.toBase64Image(); ; 
+            const dl = document.getElementById('download-btn');
+            dl.download = 'chart.png';
+            dl.href = myChart.toBase64Image(); ; 
         }
         catch (err) {
             console.log("download-btn:\t",err)

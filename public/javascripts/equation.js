@@ -114,10 +114,6 @@ exports.getpolynomials = (array_x, array_y, order = 1) =>{
     dataY = [...array_y];
     dataAll = [dataX, dataY] ;
 
-    // console.log("dataX: \t",dataX);
-    // console.log("dataY: \t",dataY);
-    // console.log(dataAll);
-
     const equations = getArrayEquations(dataAll, order);
     
     equations.map((eqn)=>{

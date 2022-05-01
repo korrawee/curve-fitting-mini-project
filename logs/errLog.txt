@@ -764,3 +764,7 @@ Require stack:
 20220501	09:11:17	7922d1e3-1d52-4b97-a1b3-c7a71d9a2625	Error: ENOENT: no such file or directory, open 'E:\Coding\Numerical\curve-fitting-mini-project\public\uploads\up_data-1651371077687-rank.csv'
 20220501	09:14:07	7f2cd400-03a2-4311-ab8b-2a66151334b3	Error: ENOENT: no such file or directory, open 'E:\Coding\Numerical\curve-fitting-mini-project\public\uploads\up_data-1651371247532-rank.csv'
 20220501	20:23:37	1c149421-6985-44c8-9ba3-df42cc55f41a	ReferenceError: alert is not defined
+20220501	22:30:30	a48891c2-63e0-4ffb-99a4-d7976173b81c	ReferenceError: __basedir is not defined
+20220501	23:02:03	ce4f6fad-46f4-4738-aacb-e76d0a53e17f	ReferenceError: __basedir is not defined
+20220501	23:04:23	0964c109-1f2a-4349-8eef-2b4dcf8e9b8c	Error: ENOENT: no such file or directory, open 'public/uploads/up_data-1651421063751-data_set.csv'
+20220502	00:20:05	7f7cf30f-1ccc-48d6-9a39-f29ca8a8035d	Error: ENOENT: no such file or directory, open 'public/uploads/up_data-1651425605902-S__50249761.jpg'
