@@ -59,16 +59,17 @@ app.post('^/$|/index(.html)?', (req,res) => {
     let data_x = req.body["data-x"].split(',').map(x => parseFloat(x.trim()));
     let data_y = req.body["data-y"].split(',').map(y => parseFloat(y.trim()));
     let order = parseInt(req.body["data-order"]);
-    let arrResult = getpolynomials(data_x, data_y, order);     // [eqn, dataset]
+    let json_result = getpolynomials(data_x, data_y, order);     // = {eqn1: [data_x1,data_y1], eqn2: [data_x2,data_y2]}
 
-    console.log('result =>\t',arrResult);
-    // Socket.io
+    console.log('result =>\t',json_result);
+
+    // Socket.io Send data to front-end
     io.on('connection', function(socket) {
         console.log('A user connected');
-        io.emit('data', [[data_x,data_y], arrResult]);
+        io.emit('data', [[data_x,data_y], json_result]);
         //Whenever someone disconnects this piece of code executed
         socket.on('disconnect', function () {
-        console.log('A user disconnected');
+            console.log('A user disconnected');
         });
     });
     res.redirect(req.get('referer'));
