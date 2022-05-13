@@ -768,3 +768,9 @@ Require stack:
 20220501	23:02:03	ce4f6fad-46f4-4738-aacb-e76d0a53e17f	ReferenceError: __basedir is not defined
 20220501	23:04:23	0964c109-1f2a-4349-8eef-2b4dcf8e9b8c	Error: ENOENT: no such file or directory, open 'public/uploads/up_data-1651421063751-data_set.csv'
 20220502	00:20:05	7f7cf30f-1ccc-48d6-9a39-f29ca8a8035d	Error: ENOENT: no such file or directory, open 'public/uploads/up_data-1651425605902-S__50249761.jpg'
+20220512	15:56:15	9398ae01-d907-4d03-acb4-ce8d82f92cc6	ReferenceError: constants is not defined
+20220513	19:37:05	3cb9bbd2-4ccf-4e5f-b0ed-4ea727a94cd0	MulterError: Unexpected field
+20220513	20:17:57	16858f9f-9fa8-4be7-a98b-ab22e5cec5fa	ReferenceError: path is not defined
+20220513	20:18:47	e2dfdbb6-92a6-4c21-9924-674b34d7e1df	ReferenceError: io is not defined
+20220513	21:07:38	713bf0bb-7fb7-4bf6-8748-67f817f6738f	ReferenceError: getpolynomials is not defined
+20220513	21:30:37	05886f40-5165-4edd-8a8b-78cd7ef5758e	Error: Cannot calculate inverse, determinant is zero

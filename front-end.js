@@ -3,6 +3,19 @@ const Chart = require('chart.js');
 
 var myChart ;
 
+////////////////////
+/// Update Graph ///
+////////////////////
+io().on('error-mes',(mes)=>{
+    const err = document.getElementById('err-container');
+    if(mes != ''){
+        err.hidden = false;
+        err.innerHTML = "Please Upload CSV File!";
+    }else{
+        err.hidden = true;
+        err.innerHTML = "";
+    }
+});
 io().on('data', (data) =>{                  //  data[0] = sample_data, data[1] = {eqn1: [data_x1,data_y1,err], eqn2: [data_x2,data_y2,err]}
     console.log("Get Data: \t",data);
     let given_data = data[0];
@@ -91,8 +104,9 @@ io().on('data', (data) =>{                  //  data[0] = sample_data, data[1] =
     }
 });
 
-//  listening to server
-
+////////////////////////////////////
+/// Crate dataset for each line ////
+////////////////////////////////////
 const getDatasets = (data) => {
     let order = {1:"1st", 2:"2nd", 3:"3rd", 
                     4:"4th", 5:"5th", 6:"6th", 

@@ -6,7 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "nodemon server",
-    "build": "watchify ./public/javascripts/createChart.js -o ./public/javascripts/bundle.js"
+    "build": "watchify ./front-end.js -o ./public/javascripts/bundle.js"
   },
   "keywords": [],
   "author": "",
