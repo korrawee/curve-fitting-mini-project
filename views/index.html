@@ -1,51 +1,104 @@
 <!DOCTYPE html>
 <html lang="en">
 
-<head>
-    <meta charset="UTF-8">
-    <meta  http-equiv="X-HA-Compatible" content="IE=egde">
-    <meta name="viewport" content="width=devide-width, initial-scale=1.0">
-    <title>Index</title>
-    <link rel="'stylesheet" href="css/style.css"/>
-</head>
-<body>
-    <h1>Index</h1>
-    <p id="err-container"></p>
-    <form action="/upload" enctype="multipart/form-data" method="post">
-        Upload .csv file?
-        <br/>
-        <input type="file" name="up_data" accept='.csv'>
-        <br/>
-        <button type="upload-btn" type="submit">Upload File</button>
-    </form>
-    <form action="/" method="post">
-      <label for="data">Enter your X data:</label>
-      <input type="text" id="data-x" name="data-x">
-      <label for="data">Enter your Y data:</label>
-      <input type="text" id="data-y" name="data-y">
+    <head>
+        <meta charset="UTF-8">
+        <meta  http-equiv="X-HA-Compatible" content="IE=egde">
+        <meta name="viewport" content="width=devide-width, initial-scale=1.0">
+        <title>Index</title>
+        <link rel="stylesheet" type="text/css" href="css/style.css" />
+    </head>
 
-      </br>
-      <label for="data">Enter your order data:</label> 
-      <select name="data-order" id="data-order">
-          <option value="1">First Order</option>
-          <option value="2">Second Order</option>
-          <option value="3">Third Order</option>
-          <option value="4">Forth Order</option>
-          <option value="5">Fifth Order</option>
-          <option value="6">Six Order</option>
-          <option value="7">Seven Order</option>
-          <option value="8">Eight Order</option>
-          <option value="9">Nine Order</option>
-        </select>
-      <button id='btn1' type="submit">Submit</button>
-    </form>
-    
-    <div id="dw"></div>
-    <div id="display"></div>
-      
-    <div id="messages">
-        <canvas id="myChart" style="width:100%;max-width:700px"></canvas>
-    </div>
-    <script src="javascripts/bundle.js" charset="utf-8"></script>
+    <body>
+
+        <div class="container">
+
+            <h1 class="title">Generate equation from your data.</h1>
+            
+            <div class="input-container">
+        
+                <p id="err-container" class="alert-mes"></p>
+                <p id="notic-container" class="notic-mes"></p>
+        
+                <form class="upload-container" action="/upload" enctype="multipart/form-data" method="post">
+                    
+                    <div class="browse-field">
+                    
+                        <label class="btn browse-btn">
+
+                            <input type="file" name="up_data" accept='.csv'>
+                            Browse file (.csv)
+
+                        </label>
+
+                        <h4 class="file-selected"></h4>
+                    
+                    </div>
+                    
+                    <button class="btn upload-btn" type="upload-btn" type="submit">Upload file</button>
+                
+                </form>
+        
+                <form class="input-form" action="/" method="post">
+                   
+                    <div class="manual-input">
+
+                        <div class="x-field">
+
+                            <label for="data">Enter your X data:</label>
+                            <input type="text" id="data-x" name="data-x">
+                        
+                        </div>
+                        
+                        <div class="y-field">
+
+                            <label for="data">Enter your Y data:</label>
+                            <input type="text" id="data-y" name="data-y">
+                        
+                        </div>
+                    
+                    </div>
+                    <div class="order-submit-container">
+
+                        <div class="select-order">
+                    
+                            <label for="data">Enter your order data:</label> 
+                            <select name="data-order" id="data-order">
+                                <option value="1">First Order</option>
+                                <option value="2">Second Order</option>
+                                <option value="3">Third Order</option>
+                                <option value="4">Forth Order</option>
+                                <option value="5">Fifth Order</option>
+                                <option value="6">Six Order</option>
+                                <option value="7">Seven Order</option>
+                                <option value="8">Eight Order</option>
+                                <option value="9">Nine Order</option>
+                            </select>                
+                        
+                        </div>
+            
+                        <button class="submit-btn btn" id='btn1' type="submit">Submit</button>
+                    
+                    </div>
+                
+                </form>
+        
+            </div>
+        
+            
+            <div id="messages">
+                <canvas id="myChart" style="width:100%;max-width:700px"></canvas>
+            </div>
+            
+            <div id="dw"></div>
+            <div class="gen-eqn-container">
+                <label for="display">Generated equations:</label>
+                <div id="display"></div>
+            </div>
+        </div>
+        
+        <script src="javascripts/bundle.js" charset="utf-8"></script>
+
 </body>
+
 </html>

@@ -1,6 +1,6 @@
 const fs = require('fs');
 const csv = require('fast-csv');
-let data;
+let data = [[],[]];
 let message;
 const upload = async(req,res) => {
     try {
@@ -16,10 +16,10 @@ const upload = async(req,res) => {
             throw error.message;
         })
         .on("data", (row) =>{
-            data = [[],[]];
             keys = Object.keys(row);
             data[0].push(row[keys[0]]); // X data-points
             data[1].push(row[keys[1]]); // Y data-points
+            message = "uploaded successfuly.";
         });
     }catch(error){
         console.log(error);

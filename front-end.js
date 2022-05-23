@@ -1,6 +1,23 @@
 const {io} = require('socket.io/client-dist/socket.io');
 const Chart = require('chart.js');
 
+const notic = document.querySelector(".notic-mes");
+const gen_eqn_container = document.querySelector(".gen-eqn-container");
+notic.style.display = 'none';
+gen_eqn_container.style.display = 'none';
+
+////////////////////////////
+/// Display browsed file ///
+////////////////////////////
+var upload = document.querySelector('.browse-btn input');
+const label = document.querySelector('.file-selected');
+
+upload.addEventListener("change", () => {
+    let path = upload.value.split("\\");
+    let last_index = path.length - 1;
+	label.innerHTML = path[last_index];
+});
+
 var myChart ;
 
 ////////////////////
@@ -9,11 +26,10 @@ var myChart ;
 io().on('error-mes',(mes)=>{
     const err = document.getElementById('err-container');
     if(mes != ''){
-        err.hidden = false;
+        err.style.display = "block";
         err.innerHTML = "Please Upload CSV File!";
     }else{
-        err.hidden = true;
-        err.innerHTML = "";
+        err.style.display = "none";
     }
 });
 io().on('data', (data) =>{                  //  data[0] = sample_data, data[1] = {eqn1: [data_x1,data_y1,err], eqn2: [data_x2,data_y2,err]}
@@ -26,50 +42,64 @@ io().on('data', (data) =>{                  //  data[0] = sample_data, data[1] =
     let chartStatus = Chart.getChart("myChart"); // <canvas> id
     const dis = document.getElementById("display") ;
     
-    if ( dis.childNodes.length != 0){      //   Delete previous data in dis
+    if ( dis.childNodes.length != 0){      //   Delete previous data in display
         while (dis.firstChild) {
             dis.removeChild(dis.lastChild);
         }
     }
     
-    Object.keys(result_data).map((key)=> {  
-        let eqn = document.createElement("label") ;
-        var err = document.createElement("label") ;
-        eqn.id = 'eqa-txt' ;
-        err.id = "error-txt";
-        dis.appendChild(eqn) ;
-        dis.appendChild(err) ;
-        dis.appendChild(document.createElement("br")) ;
+    Object.keys(result_data).map((key,i)=> {  
+ 
 
         //  Convert equation
         if(key != "given"){
-            // key = '4 + ( -0.5 * math.pow(x,1) ) + ( + 0.5 * math.pow(x,2) )'
-            let key_pow = key.match(/math.pow\((.*?)(.*?)\)/g);
-            let tmp = "";
-            
-            key_pow.map((key_pow,i)=>{
-            // key = key.replace(key_pow,`x<sup>${i+1}</sup>`);
-            if(tmp ===""){
-                tmp = key.replace(key_pow,`x<sup>${i+1}</sup>`);   
-            }else{
-                tmp = tmp.replace(key_pow,`x<sup>${i+1}</sup>`);   
-            }
-        });
+            tmp = equationToHTML(key);
             expressions[key] = tmp;
-            eqn.innerHTML =`${expressions[key]}`;                            // key = equation
-            err.innerHTML = `\tError: ${result_data[key][2]}` ;   //  err value
+
+            if(expressions[key] != NaN && result_data[key][2] != null){
+                const gen_eqn_container = document.querySelector(".gen-eqn-container");
+                gen_eqn_container.style.display = 'block';
+                let eqn = document.createElement("p") ;
+                var err = document.createElement("p") ;
+                eqn.id = 'eqa-txt' ;
+                err.id = "error-txt";
+                dis.appendChild(eqn) ;
+                dis.appendChild(err) ;
+                dis.appendChild(document.createElement("br")) ;
+
+                eqn.innerHTML =`<span>No.${i+1}</span> ${expressions[key]}`;                            // key = equation
+                err.innerHTML = `\t<span>Error:</span> ${result_data[key][2]}` ;   //  err value
+
+            }
         }
-        
+    })   
+
+
+    ///////////////////
+    // Copy Equation //
+    ///////////////////
+
+    const eqns = document.getElementById("display");
+    eqns.addEventListener("click", (event) => {
+        if(event.target.id === 'eqa-txt'){
+            doCopyToClipboard(event.target.innerHTML);
+            const notic = document.querySelector(".notic-mes");
+            notic.textContent = "Copied equation successfully.";
+            notic.style.display = 'block';
+        }
     });
-    
+
+    /////////////////////////
+    // Create download btn //
+    /////////////////////////
     if (document.getElementById("dw-btn") === null){
         const div = document.getElementById("dw") ;
-        const dw = document.createElement("button") ; 
-        dw.id = "dw-btn" ;
-        dw.innerHTML = "Download"
+        if(document.getElementById("download-btn") != null){
+            div.removeChild(document.getElementById("download-btn"));
+        }
         const dl = document.createElement('a');
-        dl.id = "download-btn"
-        dl.appendChild(dw) ;
+        dl.textContent = "Download Graph"
+        dl.id = "download-btn";
         div.appendChild(dl) ;
     }
     
@@ -145,3 +175,59 @@ const getRandomColor = () => {
     }
     return color;
   }
+
+
+// 
+//  Convert from 'math.pow(x,1)' to 'x<sup>1</sup>'
+//
+const equationToHTML = (eqn) =>{
+    // key = '4 + ( -0.5 * math.pow(x,1) ) + ( + 0.5 * math.pow(x,2) )'
+    let key_pow = eqn.match(/math.pow\((.*?)(.*?)\)/g);
+    let tmp = "";
+
+    key_pow.map((key_pow,i)=>{
+        // key = key.replace(key_pow,`x<sup>${i+1}</sup>`);
+        if(tmp ===""){
+            tmp = eqn.replace(key_pow,`x<sup>${i+1}</sup>`);   
+        }else{
+            tmp = tmp.replace(key_pow,`x<sup>${i+1}</sup>`);   
+        }
+    });
+    return tmp;
+};
+
+// 
+//  Convert from 'x<sup>1</sup>' to 'x^1'
+//
+const htmlToEquation = (eqn) =>{
+    let key_pow = eqn.match(/<sup>(.*?)<\/sup>/g);
+    let tmp = "";
+
+    key_pow.map((key_pow,i)=>{
+        // key = key.replace(key_pow,`x<sup>${i+1}</sup>`);
+        if(tmp ===""){
+            tmp = eqn.replace(key_pow,`^${i+1}`);   
+        }else{
+            tmp = tmp.replace(key_pow,`^${i+1}`);   
+        }
+    });
+    return tmp;
+};
+
+//
+//  Copy eqn to clipboard
+//
+const doCopyToClipboard = (eqn) => {
+    console.log(eqn);
+    let new_eqn = htmlToEquation(eqn);
+
+    const temp = document.createElement("input");
+    temp.setAttribute("value", new_eqn);
+    document.querySelector("body").appendChild(temp);
+    temp.select()
+
+    document.execCommand("copy");
+
+    document.body.removeChild(temp);
+
+};

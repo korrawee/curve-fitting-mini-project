@@ -1,7 +1,166 @@
-body h1{
-    padding-top: 10rem;
-    font-size: 10rem;
+*{
+    padding:0;
+    margin:0;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 16px;
+    --radius-val: 12px; 
+    --shadow-color: #282828; 
+}
+body{
     height: 100%;
+    display: flex;
+    justify-content: center;
+}
+.container{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin-top: 5rem;
+    padding-left: 5rem;
+    padding-right: 5rem;
+    max-width: 1024px;
+
+    border: 1px solid var(--shadow-color);
+    border-radius: var(--radius-val);
+    box-shadow: #282828 5px 5px;
+}
+.title{
+    margin-top: 3rem;
+    margin-bottom: 3rem;
+    font-size: 2rem;
+}
+.input-container{
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    margin-left: 3rem;
+    padding-right: 0;
+    width: min-content;
+}
+.alert-mes, .notic-mes{
+
+    color: white;
+    background-color: rgb(240, 69, 66);
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+    padding: .5rem;
     width: 100%;
-    background-color: brown;
+}
+.notic-mes{
+    background-color: rgb(14, 209, 95);
+}
+.upload-container{
+    width: 80%;
+    display: flex;
+    font-size: 16px;
+    justify-content: space-between;
+    margin-bottom: 1rem;
+}
+
+.input-form{
+    display: flex;
+}
+.manual-input{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+.x-field{
+    margin-bottom: 1rem;
+}
+.browse-field{
+    display: inline-flex;
+    align-items : center;
+}
+.file-selected{
+    margin-left: .5rem;
+}
+.btn, #download-btn{
+    align-self: end;
+    margin-top: 1.5rem;
+    padding: .5rem;
+    padding-left: 1rem;
+    padding-right: 1rem;
+
+    background-color: white;
+    border: 1px solid var(--shadow-color);
+    border-radius: var(--radius-val);
+    box-shadow: var(--shadow-color) 2px 2px;
+    transition: all .3s;
+}
+.submit-btn{
+    padding-left: 2rem;
+    padding-right: 2rem;
+    font-size: 18px;
+}
+.browse-btn, .upload-btn{
+    margin-top:0;
+    padding: .25rem;
+    padding-left: 1rem;
+    padding-right: 1rem;
+    font-size: 14px;
+}
+
+.browse-btn input[type="file"]{
+    display: none;
+}
+
+
+.btn:hover, #download-btn:hover{
+    border-color:rgb(14, 209, 95);
+    box-shadow: rgb(14, 209, 95) 2px 2px;
+    background: var(--shadow-color);
+    color: white;
+}
+
+.order-submit-container{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 100%;
+    
+    margin-left: 5rem;
+    min-width: max-content;
+}
+.select-order{
+    display: inline;
+}
+.select-order label{
+    text-align: top;
+}
+
+#messages{
+    width: 100%;
+}
+
+#dw{
+    display: inline;
+    align-self: end;
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+}
+#download-btn{
+    text-decoration: none;
+    color: black;
+}
+
+.gen-eqn-container{
+    display: inline;
+    align-self: start;
+}
+.gen-eqn-container label{
+    font-size: large;
+    font-weight: 700;
+}
+.gen-eqn-container span{
+    font-weight: 700;
+}
+#display{
+    display: inline;
+    align-self: start;
+}
+#eqa-txt:hover{
+    cursor: pointer;
+    font-weight: bolder;
 }

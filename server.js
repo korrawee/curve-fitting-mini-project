@@ -64,6 +64,8 @@ app.post('^/$|/index(.html)?', (req,res) => {
     const {getpolynomials} = require('./public/javascripts/equation.js');  
     let data_x,data_y;
     let csvData = csvController.Getdata;
+    console.log(csvData);
+
     let order = parseInt(req.body["data-order"]);
 
     if(csvData[0].length != 0){
@@ -76,7 +78,7 @@ app.post('^/$|/index(.html)?', (req,res) => {
         data_y = req.body["data-y"].split(',').map(y => parseFloat(y.trim()));
         console.log(data_x,data_y);
     }
-    let json_result = getpolynomials(data_x, data_y, order);     // = {eqn1: [data_x1,data_y1], eqn2: [data_x2,data_y2]}
+    let json_result = getpolynomials(data_x, data_y, order);     // = {eqn1: [data_x1,data_y1,error1], eqn2: [data_x2,data_y2,error2]}
 
     console.log('result =>\t',json_result);
 
