@@ -3,16 +3,43 @@ const Chart = require('chart.js');
 const notic = document.querySelector(".notic-mes");
 const gen_eqn_container = document.querySelector(".gen-eqn-container");
 const err = document.getElementById('err-container');
+const upload = document.querySelector('.browse-btn input');
+const submit_btn = document.querySelector(".submit-btn");
+const label = document.querySelector('.file-selected');
 
+// load manual input.
+const loadInput = () => {
+    const x_input = document.getElementById('data-x');
+    const y_input = document.getElementById('data-y');
+    try{
+        x_input.value = localStorage.getItem("x_input");
+        y_input.value = localStorage.getItem("y_input");
+    }catch{
+        x_input.value = '';
+        y_input.value = '';
+    }
+};
+loadInput();
 
 notic.style.display = 'none';
 gen_eqn_container.style.display = 'none';
 
+
+submit_btn.addEventListener("click", () =>{
+    const x_input = document.getElementById('data-x');
+    const y_input = document.getElementById('data-y');
+    localStorage.setItem("x_input",x_input.value);
+    localStorage.setItem("y_input",y_input.value);
+});
+
+upload.addEventListener("click", () =>{
+    localStorage.removeItem("x_input");
+    localStorage.removeItem("y_input");
+})
+
 ////////////////////////////
 /// Display browsed file ///
 ////////////////////////////
-var upload = document.querySelector('.browse-btn input');
-const label = document.querySelector('.file-selected');
 
 upload.addEventListener("change", () => {
     let path = upload.value.split("\\");
