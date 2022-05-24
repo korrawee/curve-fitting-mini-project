@@ -1,8 +1,10 @@
 const {io} = require('socket.io/client-dist/socket.io');
 const Chart = require('chart.js');
-
 const notic = document.querySelector(".notic-mes");
 const gen_eqn_container = document.querySelector(".gen-eqn-container");
+const err = document.getElementById('err-container');
+
+
 notic.style.display = 'none';
 gen_eqn_container.style.display = 'none';
 
@@ -16,22 +18,37 @@ upload.addEventListener("change", () => {
     let path = upload.value.split("\\");
     let last_index = path.length - 1;
 	label.innerHTML = path[last_index];
+
+    err.style.display = "none";
 });
 
 var myChart ;
 
+/////////////////////
+/// Alert message ///
+/////////////////////
+
+
+io().on('error-mes',(mes)=>{
+    
+    if(mes != '' && mes != undefined){
+
+        err.style.display = "block";
+        err.innerHTML = "Please Upload CSV File!";
+
+    }else{
+
+        err.style.display = "none";
+        
+    }
+});
+
+
+
 ////////////////////
 /// Update Graph ///
 ////////////////////
-io().on('error-mes',(mes)=>{
-    const err = document.getElementById('err-container');
-    if(mes != ''){
-        err.style.display = "block";
-        err.innerHTML = "Please Upload CSV File!";
-    }else{
-        err.style.display = "none";
-    }
-});
+
 io().on('data', (data) =>{                  //  data[0] = sample_data, data[1] = {eqn1: [data_x1,data_y1,err], eqn2: [data_x2,data_y2,err]}
     console.log("Get Data: \t",data);
     let given_data = data[0];
@@ -50,7 +67,6 @@ io().on('data', (data) =>{                  //  data[0] = sample_data, data[1] =
     
     Object.keys(result_data).map((key,i)=> {  
  
-
         //  Convert equation
         if(key != "given"){
             tmp = equationToHTML(key);
@@ -177,9 +193,10 @@ const getRandomColor = () => {
   }
 
 
-// 
-//  Convert from 'math.pow(x,1)' to 'x<sup>1</sup>'
-//
+///////////////////////////////////////////////////////
+//  Convert from 'math.pow(x,1)' to 'x<sup>1</sup>'  //
+///////////////////////////////////////////////////////
+
 const equationToHTML = (eqn) =>{
     // key = '4 + ( -0.5 * math.pow(x,1) ) + ( + 0.5 * math.pow(x,2) )'
     let key_pow = eqn.match(/math.pow\((.*?)(.*?)\)/g);
@@ -196,9 +213,10 @@ const equationToHTML = (eqn) =>{
     return tmp;
 };
 
-// 
-//  Convert from 'x<sup>1</sup>' to 'x^1'
-//
+/////////////////////////////////////////////
+//  Convert from 'x<sup>1</sup>' to 'x^1'  //
+/////////////////////////////////////////////
+
 const htmlToEquation = (eqn) =>{
     let key_pow = eqn.match(/<sup>(.*?)<\/sup>/g);
     let tmp = "";
@@ -214,9 +232,10 @@ const htmlToEquation = (eqn) =>{
     return tmp;
 };
 
-//
-//  Copy eqn to clipboard
-//
+/////////////////////////////
+//  Copy eqn to clipboard  //
+/////////////////////////////
+
 const doCopyToClipboard = (eqn) => {
     console.log(eqn);
     let new_eqn = htmlToEquation(eqn);

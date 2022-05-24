@@ -5,6 +5,7 @@
     font-size: 16px;
     --radius-val: 12px; 
     --shadow-color: #282828; 
+    --line-color: #28282865;
 }
 body{
     height: 100%;
@@ -17,6 +18,7 @@ body{
     justify-content: center;
     align-items: center;
     margin-top: 5rem;
+    margin-bottom: 5rem;
     padding-left: 5rem;
     padding-right: 5rem;
     max-width: 1024px;
@@ -33,10 +35,9 @@ body{
 .input-container{
     display: flex;
     flex-direction: column;
-    align-items: flex-start;
-    margin-left: 3rem;
-    padding-right: 0;
-    width: min-content;
+}
+#err-container{
+    display: none;
 }
 .alert-mes, .notic-mes{
 
@@ -51,15 +52,18 @@ body{
     background-color: rgb(14, 209, 95);
 }
 .upload-container{
-    width: 80%;
+    width: 100%;
     display: flex;
     font-size: 16px;
     justify-content: space-between;
-    margin-bottom: 1rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid var(--line-color);
 }
 
 .input-form{
     display: flex;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid var(--line-color);
 }
 .manual-input{
     display: flex;
@@ -74,7 +78,9 @@ body{
     align-items : center;
 }
 .file-selected{
-    margin-left: .5rem;
+    margin-left: 2rem;
+    font-size: large;
+    color: rgb(26, 126, 10)
 }
 .btn, #download-btn{
     align-self: end;
@@ -131,6 +137,8 @@ body{
 }
 
 #messages{
+    display: flex;
+    justify-content: center ;
     width: 100%;
 }
 
@@ -138,7 +146,7 @@ body{
     display: inline;
     align-self: end;
     margin-top: 1rem;
-    margin-bottom: 1rem;
+    margin-bottom: 2rem;
 }
 #download-btn{
     text-decoration: none;
@@ -148,6 +156,9 @@ body{
 .gen-eqn-container{
     display: inline;
     align-self: start;
+    width:100%;
+    padding-top: 1rem;
+    border-top: 1px solid var(--line-color);
 }
 .gen-eqn-container label{
     font-size: large;
@@ -159,6 +170,10 @@ body{
 #display{
     display: inline;
     align-self: start;
+}
+#eqa-txt{
+    font-weight: 400;
+    max-width: 70ch;
 }
 #eqa-txt:hover{
     cursor: pointer;
