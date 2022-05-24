@@ -64,11 +64,10 @@ app.post('^/$|/index(.html)?', (req,res) => {
     const {getpolynomials} = require('./public/javascripts/equation.js');  
     let data_x,data_y;
     let csvData = csvController.Getdata;
-    console.log(csvData);
 
     let order = parseInt(req.body["data-order"]);
 
-    if(csvData[0].length != 0){
+    if(req.body["data-x"] === '' && req.body["data-y"] === ''){
         data_x = csvData[0];
         data_y = csvData[1];
         console.log(data_x,data_y);
