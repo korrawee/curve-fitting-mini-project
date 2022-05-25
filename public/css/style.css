@@ -155,7 +155,7 @@ body{
 }
 
 .gen-eqn-container{
-    display: inline;
+    display: none;
     align-self: start;
     width:100%;
     padding-top: 1rem;
