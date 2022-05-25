@@ -7,7 +7,7 @@ const storage = multer.diskStorage({
     filename: (req, file, callBack) => {
         try{
             console.log(file.originalname)
-            callBack(null, file.fieldname + '-' + Date.now() + '-' + file.originalname )
+            callBack(null, file.fieldname + '.csv' )
         }catch{
             fs.mkdir(path.join(__dirname, './public/uploads/'), (err) => {
                 if (err) {

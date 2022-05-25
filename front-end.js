@@ -1,181 +1,47 @@
 const {io} = require('socket.io/client-dist/socket.io');
 const Chart = require('chart.js');
+const {inputData, resultData} = require('./public/javascripts/fetch.js');
+
 const notic = document.querySelector(".notic-mes");
 const gen_eqn_container = document.querySelector(".gen-eqn-container");
 const err = document.getElementById('err-container');
 const upload = document.querySelector('.browse-btn input');
+const upload_btn = document.querySelector(".upload-btn");
 const submit_btn = document.querySelector(".submit-btn");
 const label = document.querySelector('.file-selected');
+const input_y = document.getElementById('data-y');
 
-// load manual input.
-const loadInput = () => {
+let data = [[],[]];
+
+///////////////////////
+// Load manual input //
+///////////////////////
+(async() => {
     const x_input = document.getElementById('data-x');
     const y_input = document.getElementById('data-y');
-    try{
-        x_input.value = localStorage.getItem("x_input");
-        y_input.value = localStorage.getItem("y_input");
-    }catch{
-        x_input.value = '';
-        y_input.value = '';
-    }
-};
-loadInput();
+    //
+    //  Fetch session data
+    //
+    inputData().then((d) =>{
+        let data = [[],[]];
+        data[0].push(d[0]!=undefined? d[0]:'');
+        data[0].push(d[1]!=undefined? d[1]:'');
+        document.getElementById('data-x').defaultValue = data[0][0];
+        document.getElementById('data-y').defaultValue = data[0][1];
+        console.log("d",d,"data",data);
+        resultData().then((d)=>{
+            data[1] = d;
 
-notic.style.display = 'none';
+            update(data);
+
+        });
+
+    });
+})();
+
+
 gen_eqn_container.style.display = 'none';
 
-
-submit_btn.addEventListener("click", () =>{
-    const x_input = document.getElementById('data-x');
-    const y_input = document.getElementById('data-y');
-    localStorage.setItem("x_input",x_input.value);
-    localStorage.setItem("y_input",y_input.value);
-});
-
-upload.addEventListener("click", () =>{
-    localStorage.removeItem("x_input");
-    localStorage.removeItem("y_input");
-})
-
-////////////////////////////
-/// Display browsed file ///
-////////////////////////////
-
-upload.addEventListener("change", () => {
-    let path = upload.value.split("\\");
-    let last_index = path.length - 1;
-	label.innerHTML = path[last_index];
-
-    err.style.display = "none";
-});
-
-var myChart ;
-
-/////////////////////
-/// Alert message ///
-/////////////////////
-
-
-io().on('error-mes',(mes)=>{
-    
-    if(mes != '' && mes != undefined){
-
-        err.style.display = "block";
-        err.innerHTML = "Please Upload CSV File!";
-
-    }else{
-
-        err.style.display = "none";
-        
-    }
-});
-
-
-
-////////////////////
-/// Update Graph ///
-////////////////////
-
-io().on('data', (data) =>{                  //  data[0] = sample_data, data[1] = {eqn1: [data_x1,data_y1,err], eqn2: [data_x2,data_y2,err]}
-    console.log("Get Data: \t",data);
-    let given_data = data[0];
-    data[1]["given"] = given_data[1];       // add given data y to json 
-    let result_data = data[1];
-    let expressions = {};
-
-    let chartStatus = Chart.getChart("myChart"); // <canvas> id
-    const dis = document.getElementById("display") ;
-    
-    if ( dis.childNodes.length != 0){      //   Delete previous data in display
-        while (dis.firstChild) {
-            dis.removeChild(dis.lastChild);
-        }
-    }
-    
-    Object.keys(result_data).map((key,i)=> {  
- 
-        //  Convert equation
-        if(key != "given"){
-            tmp = equationToHTML(key);
-            expressions[key] = tmp;
-
-            if(expressions[key] != NaN && result_data[key][2] != null){
-                const gen_eqn_container = document.querySelector(".gen-eqn-container");
-                gen_eqn_container.style.display = 'block';
-                let eqn = document.createElement("p") ;
-                var err = document.createElement("p") ;
-                eqn.id = 'eqa-txt' ;
-                err.id = "error-txt";
-                dis.appendChild(eqn) ;
-                dis.appendChild(err) ;
-                dis.appendChild(document.createElement("br")) ;
-
-                eqn.innerHTML =`<span>No.${i+1}</span> ${expressions[key]}`;                            // key = equation
-                err.innerHTML = `\t<span>Error:</span> ${result_data[key][2]}` ;   //  err value
-
-            }
-        }
-    })   
-
-
-    ///////////////////
-    // Copy Equation //
-    ///////////////////
-
-    const eqns = document.getElementById("display");
-    eqns.addEventListener("click", (event) => {
-        if(event.target.id === 'eqa-txt'){
-            doCopyToClipboard(event.target.innerHTML);
-            const notic = document.querySelector(".notic-mes");
-            notic.textContent = "Copied equation successfully.";
-            notic.style.display = 'block';
-        }
-    });
-
-    /////////////////////////
-    // Create download btn //
-    /////////////////////////
-    if (document.getElementById("dw-btn") === null){
-        const div = document.getElementById("dw") ;
-        if(document.getElementById("download-btn") != null){
-            div.removeChild(document.getElementById("download-btn"));
-        }
-        const dl = document.createElement('a');
-        dl.textContent = "Download Graph"
-        dl.id = "download-btn";
-        div.appendChild(dl) ;
-    }
-    
-    if (chartStatus != undefined) {
-        chartStatus.destroy();
-    }
-    
-    let result_datasets = getDatasets(result_data);
-
-    myChart = new Chart("myChart", {
-        type: "line",
-        data: {
-            labels: given_data[0],  //  data x 
-            datasets: result_datasets,
-        },
-        options: {
-            animation: {
-                onComplete: done
-              }
-        }
-    });
-    function done(){
-        try{
-            const dl = document.getElementById('download-btn');
-            dl.download = 'chart.png';
-            dl.href = myChart.toBase64Image(); ; 
-        }
-        catch (err) {
-            console.log("download-btn:\t",err)
-        }
-       
-    }
-});
 
 ////////////////////////////////////
 /// Crate dataset for each line ////
@@ -276,4 +142,148 @@ const doCopyToClipboard = (eqn) => {
 
     document.body.removeChild(temp);
 
+};
+
+////////////////////////////
+/// Display browsed file ///
+////////////////////////////
+
+upload.addEventListener("change", () => {
+    let path = upload.value.split("\\");
+    let last_index = path.length - 1;
+	label.innerHTML = path[last_index];
+
+    err.style.display = "none";
+});
+
+var myChart ;
+
+/////////////////////
+/// Alert message ///
+/////////////////////
+
+notic.style.display = 'none';
+err.style.display = 'none';
+let url = new URL(window.location.href);
+let message = url.searchParams.get("mess");
+
+if(message != '' && message != undefined){
+
+    err.style.display = "block";
+    err.innerHTML = "Please Upload CSV File!";
+
+}else{
+
+    err.style.display = "none";
+    
+}
+
+////////////////////
+/// Update Graph ///
+////////////////////
+
+//  data[0] = sample_data, data[1] = {eqn1: [data_x1,data_y1,err], eqn2: [data_x2,data_y2,err]}
+const update = (data) => {
+    console.log("Get Data: \t",data);
+    let given_data = data[0];
+    console.log(data[0])
+    data[1]["given"] = given_data[1];       // add given data y to json 
+    let result_data = data[1];
+
+    console.log(data)
+
+    let expressions = {};
+
+    let chartStatus = Chart.getChart("myChart"); // <canvas> id
+    const dis = document.getElementById("display") ;
+
+    if ( dis.childNodes.length != 0){      //   Delete previous data in display
+        while (dis.firstChild) {
+            dis.removeChild(dis.lastChild);
+        }
+    }
+
+    Object.keys(result_data).map((key,i)=> {  
+
+        //  Convert equation
+        if(key != "given"){
+            tmp = equationToHTML(key);
+            expressions[key] = tmp;
+
+            if(expressions[key] != NaN && result_data[key][2] != null){
+                const gen_eqn_container = document.querySelector(".gen-eqn-container");
+                gen_eqn_container.style.display = 'block';
+                let eqn = document.createElement("p") ;
+                var err = document.createElement("p") ;
+                eqn.id = 'eqa-txt' ;
+                err.id = "error-txt";
+                dis.appendChild(eqn) ;
+                dis.appendChild(err) ;
+                dis.appendChild(document.createElement("br")) ;
+
+                eqn.innerHTML =`<span>No.${i+1}</span> ${expressions[key]}`;                            // key = equation
+                err.innerHTML = `\t<span>Error:</span> ${result_data[key][2]}` ;   //  err value
+
+            }
+        }
+    })   
+
+
+    ///////////////////
+    // Copy Equation //
+    ///////////////////
+
+    const eqns = document.getElementById("display");
+    eqns.addEventListener("click", (event) => {
+        if(event.target.id === 'eqa-txt'){
+            doCopyToClipboard(event.target.innerHTML);
+            const notic = document.querySelector(".notic-mes");
+            notic.textContent = "Copied equation successfully.";
+            notic.style.display = 'block';
+        }
+    });
+
+    /////////////////////////
+    // Create download btn //
+    /////////////////////////
+    if (document.getElementById("dw-btn") === null){
+        const div = document.getElementById("dw") ;
+        if(document.getElementById("download-btn") != null){
+            div.removeChild(document.getElementById("download-btn"));
+        }
+        const dl = document.createElement('a');
+        dl.textContent = "Download Graph"
+        dl.id = "download-btn";
+        div.appendChild(dl) ;
+    }
+
+    if (chartStatus != undefined) {
+        chartStatus.destroy();
+    }
+
+    let result_datasets = getDatasets(result_data);
+
+    myChart = new Chart("myChart", {
+        type: "line",
+        data: {
+            labels: given_data[0],  //  data x 
+            datasets: result_datasets,
+        },
+        options: {
+            animation: {
+                onComplete: done
+                }
+        }
+    });
+    function done(){
+        try{
+            const dl = document.getElementById('download-btn');
+            dl.download = 'chart.png';
+            dl.href = myChart.toBase64Image(); ; 
+        }
+        catch (err) {
+            console.log("download-btn:\t",err)
+        }
+        
+    }
 };

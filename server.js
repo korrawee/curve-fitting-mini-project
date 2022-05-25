@@ -5,11 +5,11 @@ const io = require('socket.io')(http);
 const cors = require('cors');
 const path = require('path');
 const fs = require('fs');
+const csv = require('fast-csv');
+
 const { logger }  = require('./middleware/logEvents');
 const errorHandler  = require('./middleware/errorHandler');
 const session = require('express-session');
-const { sendFile } = require('express/lib/response');
-const csvController = require("./public/javascripts/csvController");
 const uploadFile = require('./middleware/upload');
 const {init_session} = require('./middleware/session');
 
@@ -59,16 +59,13 @@ app.get('/api/session-data', (req,res) => {
 app.get('/api/generate-data', (req,res) => {
     res.send(req.session.data.json_result);
 });
-app.get('/api/prev-src', (req,res) =>{
-    res.send(req.session.data.prev_src);
-});
 
 app.get('^/$|/index(.html)?/:mes', (req,res) => {
 
     if(req.session.isFirst == 1) {
         console.log(req.session);
     } else {
-        console.log('!st time here');
+        console.log('1st time here',req.sessionID);
         req.session.isFirst = init_session.isFirst;
         req.session.data = init_session.data;
         res.cookie('isFirst', 1, { maxAge: 60 * 1000, singed: true});
@@ -88,26 +85,16 @@ app.get('^/$|/index(.html)?/:mes', (req,res) => {
 });
 
 app.post('^/$|/index(.html)?', (req,res) => {
-    const my_path = path.join(__dirname, 'views', 'index.html');
+
     const {getpolynomials} = require('./public/javascripts/equation.js');  
     let data_x,data_y;
-    let csvData = [...csvController.data];
 
     let order = parseInt(req.body["data-order"]);
-    console.log('========\n========\n======');
-    console.log(req.body.src);
-    if(req.body.src === "upload"){
-        data_x = csvData[0];
-        data_y = csvData[1];
-        console.log(data_x,data_y);
-    }else if(req.body.src === "manual"){
-        //  Parse string data to array of data_x and data_y
-        data_x = req.body["data-x"].split(',').map(x => parseFloat(x.trim()));
-        data_y = req.body["data-y"].split(',').map(y => parseFloat(y.trim()));
-        console.log(data_x,data_y);
-    }
+    //  Parse string data to array of data_x and data_y
+    data_x = req.body["data-x"].split(',').map(x => parseFloat(x.trim()));
+    data_y = req.body["data-y"].split(',').map(y => parseFloat(y.trim()));
+    console.log(data_x,data_y);
 
-    
     let json_result = getpolynomials(data_x, data_y, order);     // = {eqn1: [data_x1,data_y1,error1], eqn2: [data_x2,data_y2,error2]}
     
     // Save data to session
@@ -117,21 +104,60 @@ app.post('^/$|/index(.html)?', (req,res) => {
         "prev_src" : {"prev_src": req.body.src}
     };
 
-    // console.log('result =>\t',json_result);
-
-    // // Socket.io Send data to front-end
-    // io.on('connection', function(socket) {
-    //     console.log('A user connected');
-    //     io.emit('data', [[data_x,data_y], json_result]);
-    //     //Whenever someone disconnects this piece of code executed
-    //     socket.on('disconnect', function () {
-    //         console.log('A user disconnected');
-    //     });
-    // });
     res.redirect(req.get('referer'));
 });
 
-app.post('^/$|/upload(.html)?', uploadFile.single("up_data"), csvController.upload);
+app.post('^/$|/upload(.html)?', uploadFile.single("up_data"), async(req,res) =>{
+    let message = '';
+    let data_x=[], data_y = [];
+
+    if(req.file == undefined){
+        message = "Please upload CSV File!";
+        return res.redirect('/?mess=' + message);
+    }
+
+    console.log("\ncleardata\n")
+    let path = __dirname + "/public/uploads/" + req.file.filename;
+
+    fs.createReadStream(path)
+
+    .pipe(csv.parse({headers: true}))
+
+    .on('error',(error) =>{
+
+        throw error.message;
+
+    })
+    .on("data", (row) =>{
+
+        keys = Object.keys(row);
+        data_x.push(row[keys[0]]); // X data-points
+        data_y.push(row[keys[1]]); // Y data-points
+        console.log("data==========================================");
+        console.log(data_x,data_y);
+        message = "uploaded successfuly.";
+        req.body["data-x"] = data_x;
+        req.body["data-y"] = data_y;
+
+    }).on("finish", () => {
+        const {getpolynomials} = require('./public/javascripts/equation.js');  
+        let order = parseInt(req.body["data-order"]);
+
+        console.log("here",data_x,data_y);
+        
+        let json_result = getpolynomials(data_x, data_y, 1);     // = {eqn1: [data_x1,data_y1,error1], eqn2: [data_x2,data_y2,error2]}
+        
+        // Save data to session
+        req.session.data = {
+            "input": {"input":[data_x, data_y]},
+            "json_result": json_result,
+            "prev_src" : {"prev_src": req.body.src}
+        };
+        fs.unlinkSync(path)
+        res.redirect('/')
+    });
+
+});
 
 app.get('/new-page(.html)?', (req,res) => {
     res.sendFile( path.join(__dirname, 'views', 'new-page.html') );
