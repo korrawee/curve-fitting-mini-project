@@ -7,7 +7,6 @@ const err = document.getElementById('err-container');
 const upload = document.querySelector('.browse-btn input');
 const label = document.querySelector('.file-selected');
 
-
 ///////////////////////
 // Load manual input //
 ///////////////////////
@@ -54,16 +53,19 @@ err.style.display = "none";
 let url = new URL(window.location.href);
 let message = url.searchParams.get("mess");
 
-if(message === "uploaded successfuly."){
+if(message === "Upload file successfuly."){
 
     notic.style.display = "block";
     notic.innerHTML = message;
 
-}else if(message === "uploaded successfuly."){
+}else if(message === "Please upload CSV File!"){
 
     err.style.display = "block";
     err.innerHTML = message;
 
+}else if(message === "Error! your dataset must have at least 2 points and number of x values must equal to number of y values"){
+    err.style.display = "block";
+    err.innerHTML = message;
 }else{
 
     err.style.display = "none";
@@ -13373,14 +13375,11 @@ let myChart;
 ////////////////////
 //  data[0] = sample_data, data[1] = {eqn1: [data_x1,data_y1,err], eqn2: [data_x2,data_y2,err]}
 const update = (data) => {
-    console.log("Get Data: \t",data);
     let given_data = data[0];
-    console.log(data[0])
+    
     data[1]["given"] = given_data[1];       // add given data y to json 
+    
     let result_data = data[1];
-
-    console.log(data)
-
     let expressions = {};
 
     let chartStatus = Chart.getChart("myChart"); // <canvas> id
@@ -13569,7 +13568,6 @@ const getRandomColor = () => {
 /////////////////////////////
 
 const doCopyToClipboard = (eqn) => {
-    console.log(eqn);
     let new_eqn = htmlToEquation(eqn);
 
     const temp = document.createElement("input");
@@ -13582,7 +13580,6 @@ const doCopyToClipboard = (eqn) => {
     document.body.removeChild(temp);
 
 };
-
 
 module.exports = {
     update,

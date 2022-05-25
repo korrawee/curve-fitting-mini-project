@@ -5,8 +5,7 @@ const find_eqn = (sample_data, order) => { // sample_data => [ [],[] ]
     const n = sample_data[0].length;
     let x_data = [...sample_data[0]];
     let y_data = [...sample_data[1]];
-    console.log(`x_data:\t${x_data}`);
-    console.log(`y_data:\t${y_data}`);
+
     let matrix_left = [...Array(order+1).fill().map( x => Array(order+1) )],   // Init matrix
         matrix_mid = [...Array(order+1)],
         matrix_right = [...Array(order+1)];
@@ -23,7 +22,6 @@ const find_eqn = (sample_data, order) => { // sample_data => [ [],[] ]
                 matrix_left[row][col] = math.round(math.sum(x_data.map(x => {return math.pow(x, row+col)})), 8);
                 //  Right matrix
                 matrix_right[row] = math.sum(x_data.map( (x,i) => {
-                    console.log(`${x} ${math.pow(x,row)} ${y_data[i]}: ${i}\t${math.pow(x,row) * y_data[i]}`);
                     return math.round(math.pow(x,row) * y_data[i],8);
                 }))
             }
@@ -33,19 +31,17 @@ const find_eqn = (sample_data, order) => { // sample_data => [ [],[] ]
     //  Convert array to matrix
     let decimal = 5;
 
-    console.log("\nMatrix Left: \n",matrix_left);
     matrix_left = math.matrix(matrix_left);
     matrix_right = math.matrix(matrix_right);
     matrix_right["_data"] = matrix_right["_data"].map( inner => Number(inner.toFixed(decimal)))
+   
     //  Invert left matrix
     matrix_left = math.inv(matrix_left);
     matrix_left["_data"] = matrix_left["_data"].map(outer => outer.map(inner => Number(inner.toFixed(decimal))));
-    console.log("\nMatrix Left INV: \n",matrix_left);
-    console.log("\nMatrix Right: \n",matrix_right);
+
     //  Find unknow variables from [matrix_left]^-1 * [matrix_right]
     let constants = math.multiply(matrix_left,matrix_right)["_data"];
     constants = constants.map( inner => Number(inner.toFixed(decimal)))
-    console.log("\nAfter Multiply: \n",constants);
     
     //  Construct function from constants 
     let fx ='';
@@ -58,7 +54,6 @@ const find_eqn = (sample_data, order) => { // sample_data => [ [],[] ]
             fx += ` + ( ${tmp} * math.pow(x,${i}) )` ;
         }
     }
-    console.log(`\nEquation: ${fx}`);
     return fx;
 };
 
@@ -120,10 +115,17 @@ exports.getpolynomials = (array_x, array_y, order = 1) =>{
         result[eqn].push(error(dataY,result[eqn][1]));
     });
 
-    console.log(result);
-
     return result ;    // = {eqn1: [data_x1,data_y1, err], eqn2: [data_x2,data_y2, err]}
 }
+
+exports.isDataAvailable = (data_x,data_y) => {
+    if(data_x.length != data_y.length || data_x.length <= 1 || data_y.length <= 1
+        || isNaN(data_x[0]) || isNaN(data_y[0]) ){
+        return true
+    }
+    return false
+}
+
 
 // SAMPLE DATA
 // [[0, 0.5, 1.0, 1.5, 2.0, 2.5],[0, 0.25, 1.0, 2.25, 4.0, 5.25]]

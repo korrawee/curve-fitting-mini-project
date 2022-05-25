@@ -6,7 +6,6 @@ const err = document.getElementById('err-container');
 const upload = document.querySelector('.browse-btn input');
 const label = document.querySelector('.file-selected');
 
-
 ///////////////////////
 // Load manual input //
 ///////////////////////
@@ -53,16 +52,19 @@ err.style.display = "none";
 let url = new URL(window.location.href);
 let message = url.searchParams.get("mess");
 
-if(message === "uploaded successfuly."){
+if(message === "Upload file successfuly."){
 
     notic.style.display = "block";
     notic.innerHTML = message;
 
-}else if(message === "uploaded successfuly."){
+}else if(message === "Please upload CSV File!"){
 
     err.style.display = "block";
     err.innerHTML = message;
 
+}else if(message === "Error! your dataset must have at least 2 points and number of x values must equal to number of y values"){
+    err.style.display = "block";
+    err.innerHTML = message;
 }else{
 
     err.style.display = "none";

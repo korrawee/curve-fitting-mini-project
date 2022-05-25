@@ -6,14 +6,11 @@ let myChart;
 ////////////////////
 //  data[0] = sample_data, data[1] = {eqn1: [data_x1,data_y1,err], eqn2: [data_x2,data_y2,err]}
 const update = (data) => {
-    console.log("Get Data: \t",data);
     let given_data = data[0];
-    console.log(data[0])
+    
     data[1]["given"] = given_data[1];       // add given data y to json 
+    
     let result_data = data[1];
-
-    console.log(data)
-
     let expressions = {};
 
     let chartStatus = Chart.getChart("myChart"); // <canvas> id
@@ -202,7 +199,6 @@ const getRandomColor = () => {
 /////////////////////////////
 
 const doCopyToClipboard = (eqn) => {
-    console.log(eqn);
     let new_eqn = htmlToEquation(eqn);
 
     const temp = document.createElement("input");
@@ -215,7 +211,6 @@ const doCopyToClipboard = (eqn) => {
     document.body.removeChild(temp);
 
 };
-
 
 module.exports = {
     update,
