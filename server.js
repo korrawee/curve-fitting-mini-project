@@ -7,18 +7,28 @@ const path = require('path');
 const fs = require('fs');
 const { logger }  = require('./middleware/logEvents');
 const errorHandler  = require('./middleware/errorHandler');
+const session = require('express-session');
 const { sendFile } = require('express/lib/response');
 const csvController = require("./public/javascripts/csvController");
 const uploadFile = require('./middleware/upload');
+const {init_session} = require('./middleware/session');
+
 const PORT = process.env.PORT || 3500;
 // ---------------------------------------------------
 // Express configurations
-
+app.use(session(
+    {
+        secret: 'my_session_secret', // 128 character random string is recommended
+        resave: true,
+        saveUninitialized: false,
+        cookie: { maxAge: 60 * 1000, httpOnly: true }
+    })
+);
 // custom middleware logger
 app.use(logger);
 
 // Cross Origin Resource Sharing
-const whitelist = ['https://www.google.com','http://127.0.0.1:5500', `http://localhost:${PORT}`]
+const whitelist = [`http://localhost:${PORT}`]
 const corsOptions = {
     origin: (origin, callback) => {
         if (whitelist.indexOf(origin) !== -1 || !origin){
@@ -43,9 +53,27 @@ app.use(express.static(__dirname + '/public'));
 
 // ---------------------------------------------------
 // Route Handler
+app.get('/api/session-data', (req,res) => {
+    res.send(req.session.data.input);
+});
+app.get('/api/generate-data', (req,res) => {
+    res.send(req.session.data.json_result);
+});
+app.get('/api/prev-src', (req,res) =>{
+    res.send(req.session.data.prev_src);
+});
+
 app.get('^/$|/index(.html)?/:mes', (req,res) => {
-    // res.sendFile('./views/index.html', {root: __dirname});
-    const math = require('mathjs');
+
+    if(req.session.isFirst == 1) {
+        console.log(req.session);
+    } else {
+        console.log('!st time here');
+        req.session.isFirst = init_session.isFirst;
+        req.session.data = init_session.data;
+        res.cookie('isFirst', 1, { maxAge: 60 * 1000, singed: true});
+    }
+    
     const my_path = path.join(__dirname, 'views', 'index.html');
     // Socket.io Send data to front-end
     io.on('connection', function(socket) {
@@ -63,33 +91,43 @@ app.post('^/$|/index(.html)?', (req,res) => {
     const my_path = path.join(__dirname, 'views', 'index.html');
     const {getpolynomials} = require('./public/javascripts/equation.js');  
     let data_x,data_y;
-    let csvData = csvController.Getdata;
+    let csvData = [...csvController.data];
 
     let order = parseInt(req.body["data-order"]);
-
-    if(req.body["data-x"] === '' && req.body["data-y"] === ''){
+    console.log('========\n========\n======');
+    console.log(req.body.src);
+    if(req.body.src === "upload"){
         data_x = csvData[0];
         data_y = csvData[1];
         console.log(data_x,data_y);
-    }else{
+    }else if(req.body.src === "manual"){
         //  Parse string data to array of data_x and data_y
         data_x = req.body["data-x"].split(',').map(x => parseFloat(x.trim()));
         data_y = req.body["data-y"].split(',').map(y => parseFloat(y.trim()));
         console.log(data_x,data_y);
     }
+
+    
     let json_result = getpolynomials(data_x, data_y, order);     // = {eqn1: [data_x1,data_y1,error1], eqn2: [data_x2,data_y2,error2]}
+    
+    // Save data to session
+    req.session.data = {
+        "input": {"input":[data_x, data_y]},
+        "json_result": json_result,
+        "prev_src" : {"prev_src": req.body.src}
+    };
 
-    console.log('result =>\t',json_result);
+    // console.log('result =>\t',json_result);
 
-    // Socket.io Send data to front-end
-    io.on('connection', function(socket) {
-        console.log('A user connected');
-        io.emit('data', [[data_x,data_y], json_result]);
-        //Whenever someone disconnects this piece of code executed
-        socket.on('disconnect', function () {
-            console.log('A user disconnected');
-        });
-    });
+    // // Socket.io Send data to front-end
+    // io.on('connection', function(socket) {
+    //     console.log('A user connected');
+    //     io.emit('data', [[data_x,data_y], json_result]);
+    //     //Whenever someone disconnects this piece of code executed
+    //     socket.on('disconnect', function () {
+    //         console.log('A user disconnected');
+    //     });
+    // });
     res.redirect(req.get('referer'));
 });
 
