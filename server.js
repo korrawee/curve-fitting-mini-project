@@ -1,7 +1,6 @@
 const express = require('express');
 const app = express();
 const http = require('http').Server(app);
-const io = require('socket.io')(http);
 const cors = require('cors');
 const path = require('path');
 const fs = require('fs');
@@ -51,8 +50,9 @@ app.use(express.json());
 // server static files
 app.use(express.static(__dirname + '/public'));
 
-// ---------------------------------------------------
-// Route Handler
+///////////////////
+//      API      //
+///////////////////
 app.get('/api/session-data', (req,res) => {
     res.send(req.session.data.input);
 });
@@ -60,6 +60,9 @@ app.get('/api/generate-data', (req,res) => {
     res.send(req.session.data.json_result);
 });
 
+///////////////////
+// Route Handler //
+///////////////////
 app.get('^/$|/index(.html)?/:mes', (req,res) => {
 
     if(req.session.isFirst == 1) {
@@ -72,15 +75,7 @@ app.get('^/$|/index(.html)?/:mes', (req,res) => {
     }
     
     const my_path = path.join(__dirname, 'views', 'index.html');
-    // Socket.io Send data to front-end
-    io.on('connection', function(socket) {
-        console.log('A user connected', `params: ${req.query.mes}`);
-        io.emit('error-mes', req.query.mes);
-        //Whenever someone disconnects this piece of code executed
-        socket.on('disconnect', function () {
-            console.log('A user disconnected');
-        });
-    });
+
     res.sendFile( my_path );
 });
 
@@ -135,7 +130,7 @@ app.post('^/$|/upload(.html)?', uploadFile.single("up_data"), async(req,res) =>{
         data_y.push(row[keys[1]]); // Y data-points
         console.log("data==========================================");
         console.log(data_x,data_y);
-        message = "uploaded successfuly.";
+        message = "Upload file successfuly.";
         req.body["data-x"] = data_x;
         req.body["data-y"] = data_y;
 
@@ -154,9 +149,8 @@ app.post('^/$|/upload(.html)?', uploadFile.single("up_data"), async(req,res) =>{
             "prev_src" : {"prev_src": req.body.src}
         };
         fs.unlinkSync(path)
-        res.redirect('/')
+        res.redirect('/?mess=' + message)    
     });
-
 });
 
 app.get('/new-page(.html)?', (req,res) => {
@@ -167,6 +161,11 @@ app.get('/old-page(.html)?', (req,res) => {
     res.redirect( 301, '/new-page.html');
 });
 
+
+/////////////////////////
+//   Return 404 error  // 
+// for undefined route //
+/////////////////////////
 app.all('*', (req, res) =>{
     res.status(404);
     if(req.accepts('html')) {

@@ -1,4 +1,3 @@
-const { matrix } = require('mathjs');
 const math = require('mathjs');
 
 const find_eqn = (sample_data, order) => { // sample_data => [ [],[] ]
