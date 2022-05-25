@@ -48,19 +48,22 @@ upload.addEventListener("change", () => {
 /////////////////////
 /// Alert message ///
 /////////////////////
-
-notic.style.display = 'none';
-err.style.display = 'none';
+notic.style.display = "none";
+err.style.display = "none";
 let url = new URL(window.location.href);
 let message = url.searchParams.get("mess");
 
-if(message != '' && message != undefined){
+if(message === "uploaded successfuly."){
+
+    notic.style.display = "block";
+    notic.innerHTML = message;
+
+}else if(message === "uploaded successfuly."){
 
     err.style.display = "block";
-    err.innerHTML = "Please Upload CSV File!";
+    err.innerHTML = message;
 
 }else{
 
     err.style.display = "none";
-    
 }

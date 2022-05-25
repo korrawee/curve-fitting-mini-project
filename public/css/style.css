@@ -161,6 +161,10 @@ body{
     padding-top: 1rem;
     border-top: 1px solid var(--line-color);
 }
+.gen-eqn-container label span{
+    font-weight: 300;
+    color:#3c3c3c;
+}
 .gen-eqn-container label{
     font-size: large;
     font-weight: 700;
@@ -173,7 +177,7 @@ body{
     align-self: start;
 }
 #eqa-txt{
-    font-weight: 400;
+    font-weight: 300;
     max-width: 70ch;
 }
 #eqa-txt:hover{
