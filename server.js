@@ -66,9 +66,7 @@ app.get('/api/generate-data', (req,res) => {
 app.get('^/$|/index(.html)?/:mes', (req,res) => {
 
     if(req.session.isFirst == 1) {
-        console.log(req.session);
     } else {
-        console.log('1st time here',req.sessionID);
         req.session.isFirst = init_session.isFirst;
         req.session.data = init_session.data;
         res.cookie('isFirst', 1, { maxAge: 60 * 1000, singed: true});
@@ -81,14 +79,17 @@ app.get('^/$|/index(.html)?/:mes', (req,res) => {
 
 app.post('^/$|/index(.html)?', (req,res) => {
 
-    const {getpolynomials} = require('./public/javascripts/equation.js');  
+    const {getpolynomials,isDataAvailable} = require('./public/javascripts/equation.js');  
     let data_x,data_y;
 
     let order = parseInt(req.body["data-order"]);
     //  Parse string data to array of data_x and data_y
     data_x = req.body["data-x"].split(',').map(x => parseFloat(x.trim()));
     data_y = req.body["data-y"].split(',').map(y => parseFloat(y.trim()));
-    console.log(data_x,data_y);
+
+    if(isDataAvailable(data_x,data_y)){
+        res.redirect('/?mess=' + "Error! your dataset must have at least 2 points and number of x values must equal to number of y values")    
+    }
 
     let json_result = getpolynomials(data_x, data_y, order);     // = {eqn1: [data_x1,data_y1,error1], eqn2: [data_x2,data_y2,error2]}
     
@@ -99,7 +100,7 @@ app.post('^/$|/index(.html)?', (req,res) => {
         "prev_src" : {"prev_src": req.body.src}
     };
 
-    res.redirect(req.get('referer'));
+    res.redirect('/');
 });
 
 app.post('^/$|/upload(.html)?', uploadFile.single("up_data"), async(req,res) =>{
@@ -111,7 +112,6 @@ app.post('^/$|/upload(.html)?', uploadFile.single("up_data"), async(req,res) =>{
         return res.redirect('/?mess=' + message);
     }
 
-    console.log("\ncleardata\n")
     let path = __dirname + "/public/uploads/" + req.file.filename;
 
     fs.createReadStream(path)
@@ -128,18 +128,18 @@ app.post('^/$|/upload(.html)?', uploadFile.single("up_data"), async(req,res) =>{
         keys = Object.keys(row);
         data_x.push(row[keys[0]]); // X data-points
         data_y.push(row[keys[1]]); // Y data-points
-        console.log("data==========================================");
-        console.log(data_x,data_y);
         message = "Upload file successfuly.";
         req.body["data-x"] = data_x;
         req.body["data-y"] = data_y;
 
     }).on("finish", () => {
-        const {getpolynomials} = require('./public/javascripts/equation.js');  
+        const {getpolynomials, isDataAvailable} = require('./public/javascripts/equation.js');  
         let order = parseInt(req.body["data-order"]);
 
-        console.log("here",data_x,data_y);
-        
+        if(isDataAvailable(data_x,data_y)){
+            res.redirect('/?mess=' + "Error! your dataset must have at least 2 points and number of x values must equal to number of y values");   
+        }
+
         let json_result = getpolynomials(data_x, data_y, 1);     // = {eqn1: [data_x1,data_y1,error1], eqn2: [data_x2,data_y2,error2]}
         
         // Save data to session
