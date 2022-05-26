@@ -5,8 +5,8 @@ const bucket_name = 'elasticbeanstalk-ap-southeast-1-331815065301';
 
 const s3 = new aws.S3();
 aws.config.update({
-    secretAccessKey: AWS_SECRET_ACCESS_KEY,
-    accessKeyId: AWS_ACCESS_KEY_ID,
+    secretAccessKey: "9k6X4ANMRdANtDvdSQNmD3sh7jwYDtDuaP99T9No",
+    accessKeyId: "AKIAU2QNYC3KXPE3QL6H",
     region: 'ap-southeast-1'
 });
 
@@ -14,7 +14,7 @@ aws.config.update({
 const storage = multerS3({
     s3: s3,
     acl: 'public-read',
-    bucker: bucket_name,
+    bucket: bucket_name,
     key: (req, file, callBack) => {
         try{
             console.log(file.originalname)
