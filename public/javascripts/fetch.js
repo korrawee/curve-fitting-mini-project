@@ -1,7 +1,8 @@
 //
 // Load session data
+//
 exports.inputData = async () => {
-    const response = await fetch('http://localhost:3500/api/session-data');
+    const response = await fetch('/api/session-data');
     let myArray;
     try{
         myArray = await response.json(); //extract JSON from the http response
@@ -12,7 +13,7 @@ exports.inputData = async () => {
     return myArray;
 }
 exports.resultData = async () => {
-    const response = await fetch('http://localhost:3500/api/generate-data');
+    const response = await fetch('/api/generate-data');
     let myJson;
     try{
         myJson = await response.json(); //extract JSON from the http response
