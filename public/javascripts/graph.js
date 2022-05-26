@@ -34,13 +34,13 @@ const update = (data) => {
                 gen_eqn_container.style.display = 'block';
                 let eqn = document.createElement("p") ;
                 var err = document.createElement("p") ;
-                eqn.id = 'eqa-txt' ;
+                eqn.id = 'eqa-container' ;
                 err.id = "error-txt";
                 dis.appendChild(eqn) ;
                 dis.appendChild(err) ;
                 dis.appendChild(document.createElement("br")) ;
 
-                eqn.innerHTML =`<span>No.${i+1}</span> ${expressions[key]}`;                            // key = equation
+                eqn.innerHTML =`<span>No.${i+1}</span> <i id="eqa-txt">${expressions[key]}</i>`;                            // key = equation
                 err.innerHTML = `\t<span>Error:</span> ${result_data[key][2]}` ;   //  err value
 
             }
