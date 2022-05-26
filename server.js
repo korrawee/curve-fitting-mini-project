@@ -23,7 +23,7 @@ app.use(session(
         secret: 'my_session_secret', // 128 character random string is recommended
         resave: true,
         saveUninitialized: false,
-        cookie: { maxAge: 60 * 1000, httpOnly: true }
+        cookie: { maxAge: 24 * 60 * 60 * 1000, httpOnly: true }
     })
 );
 // custom middleware logger
@@ -72,7 +72,7 @@ app.get('^/$|/index(.html)?/:mes', (req,res) => {
     } else {
         req.session.isFirst = init_session.isFirst;
         req.session.data = init_session.data;
-        res.cookie('isFirst', 1, { maxAge: 60 * 1000, singed: true});
+        res.cookie('isFirst', 1, { maxAge: 24 * 60 * 60 * 1000, singed: true});
     }
     
     const my_path = path.join(__dirname, 'views', 'index.html');
