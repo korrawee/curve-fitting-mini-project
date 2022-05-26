@@ -1,3 +1,4 @@
+require("dotenv").config();
 const express = require('express');
 const app = express();
 const http = require('http').Server(app);
@@ -9,8 +10,10 @@ const csv = require('fast-csv');
 const { logger }  = require('./middleware/logEvents');
 const errorHandler  = require('./middleware/errorHandler');
 const session = require('express-session');
-const uploadFile = require('./middleware/upload');
+const {uploadFile, s3Upload, s3GetObject} = require('./middleware/upload');
 const {init_session} = require('./middleware/session');
+const { redirect } = require("express/lib/response");
+const { random } = require("mathjs");
 
 const PORT = process.env.PORT || 3500;
 // ---------------------------------------------------
@@ -103,20 +106,25 @@ app.post('^/$|/index(.html)?', (req,res) => {
     res.redirect('/');
 });
 
-app.post('^/$|/upload(.html)?', uploadFile.single("up_data"), async(req,res) =>{
-    let message = '';
-    let data_x=[], data_y = [];
-
+app.post('^/$|/upload(.html)?', uploadFile.single("up_data"), async (req,res) =>{    
     if(req.file == undefined){
         message = "Please upload CSV File!";
         return res.redirect('/?mess=' + message);
     }
+    const results = await s3Upload(req,req.file);
+    try {
+       // console.log(results);
+      } catch (err) {
+        console.log(err);
+    }
+    let {key} = results;
 
-    let path = __dirname + "/public/uploads/" + req.file.filename;
-
-    fs.createReadStream(path)
-
-    .pipe(csv.parse({headers: true}))
+    let fileStream = await s3GetObject(key);
+    fileStream.pipe(csv.parse({headers: true}))
+    let message = '';
+    let data_x=[], data_y = [];
+    
+    fileStream.pipe(csv.parse({headers: true}))
 
     .on('error',(error) =>{
 
@@ -148,17 +156,8 @@ app.post('^/$|/upload(.html)?', uploadFile.single("up_data"), async(req,res) =>{
             "json_result": json_result,
             "prev_src" : {"prev_src": req.body.src}
         };
-        fs.unlinkSync(path)
-        res.redirect('/?mess=' + message)    
+        res.redirect('/?mess=' + message);
     });
-});
-
-app.get('/new-page(.html)?', (req,res) => {
-    res.sendFile( path.join(__dirname, 'views', 'new-page.html') );
-});
-
-app.get('/old-page(.html)?', (req,res) => {
-    res.redirect( 301, '/new-page.html');
 });
 
 

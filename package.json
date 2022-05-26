@@ -1,11 +1,13 @@
 {
-  "engines": {"node": ">= 18.2"},
+  "engines": {
+    "node": ">= 18.2"
+  },
   "name": "numer",
   "version": "1.0.0",
   "description": "",
   "main": "server.js",
   "scripts": {
-    "start" : "node server.js",
+    "start": "node server.js",
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "nodemon server",
     "build": "watchify ./front-end.js -o ./public/javascripts/bundle.js"
@@ -18,12 +20,12 @@
     "chart.js": "^3.7.1",
     "cors": "^2.8.5",
     "date-fns": "^2.28.0",
+    "dotenv": "^16.0.1",
     "express": "^4.17.3",
     "express-session": "^1.17.3",
     "fast-csv": "^4.3.6",
     "mathjs": "^10.5.0",
     "multer": "^1.4.4",
-    "multer-s3": "^2.10.0",
     "nodemon": "^2.0.15",
     "uuid": "^8.3.2"
   },

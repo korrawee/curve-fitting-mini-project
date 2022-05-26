@@ -1,42 +1,40 @@
-const aws = require('aws-sdk');
+const {S3} = require('aws-sdk');
 const multer = require('multer');
-const multerS3 = require('multer-s3');
-const bucket_name = 'elasticbeanstalk-ap-southeast-1-331815065301';
 
-const s3 = new aws.S3();
-aws.config.update({
-    secretAccessKey: "9k6X4ANMRdANtDvdSQNmD3sh7jwYDtDuaP99T9No",
-    accessKeyId: "AKIAU2QNYC3KXPE3QL6H",
-    region: 'ap-southeast-1'
-});
+////////////////
+// AWS config //
+////////////////
 
+const s3 = new S3();
 
-const storage = multerS3({
-    s3: s3,
-    acl: 'public-read',
-    bucket: bucket_name,
-    key: (req, file, callBack) => {
-        try{
-            console.log(file.originalname)
-            callBack(null, file.fieldname + req.sessionID + '.csv' )
-        }catch{
-            fs.mkdir(path.join(__dirname, '/public/uploads/'), (err) => {
-                if (err) {
-                    return console.error(err);
-                }
-                console.log('Directory created successfully!');
-            });
-        }
+exports.s3Upload = async (req, file) =>{   
+    const param = {
+        Bucket: process.env.AWS_BUCKET_NAME,
+        Key: `uploads/${req.sessionID}-${file.originalname}`,
+        Body: file.buffer,
     }
-})
+    return await s3.upload(param).promise();
+}    
+
+exports.s3GetObject = async (key) =>{
+    const param = {
+        Bucket: process.env.AWS_BUCKET_NAME,
+        Key: key,
+    }
+    let result = await s3.getObject(param).createReadStream('utf-8');
+    return result
+};
+
+const storage = multer.memoryStorage()
 
 // Only CSV file available 
-const csvFilter = ( req,res,file , callBack) => {
-    if(file.mimetype.includes("csv"))   {
+const fileFilter = (req, file , callBack) => {
+    if(file.mimetype.split("/")[1] === "csv")   {
         callBack(null,true);
     }else{
-        callBack( "Please upload only .csv files",true);        
+        callBack(new multer.MulterError("LIMIT_UNEXPECTED_FILE"), false);        
     }
 }
-uploadFile = multer({ storage: storage ,fileFileter :csvFilter });
-module.exports = uploadFile;
+exports.uploadFile = multer({
+     storage: storage,fileFilter: fileFilter 
+});
