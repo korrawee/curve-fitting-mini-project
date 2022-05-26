@@ -12,8 +12,6 @@ const errorHandler  = require('./middleware/errorHandler');
 const session = require('express-session');
 const {uploadFile, s3Upload, s3GetObject} = require('./middleware/upload');
 const {init_session} = require('./middleware/session');
-const { redirect } = require("express/lib/response");
-const { random } = require("mathjs");
 
 const PORT = process.env.PORT || 3500;
 // ---------------------------------------------------
@@ -107,6 +105,9 @@ app.post('^/$|/index(.html)?', (req,res) => {
 });
 
 app.post('^/$|/upload(.html)?', uploadFile.single("up_data"), async (req,res) =>{    
+    let message = '';
+    let data_x=[], data_y = [];
+    
     if(req.file == undefined){
         message = "Please upload CSV File!";
         return res.redirect('/?mess=' + message);
@@ -121,8 +122,6 @@ app.post('^/$|/upload(.html)?', uploadFile.single("up_data"), async (req,res) =>
 
     let fileStream = await s3GetObject(key);
     fileStream.pipe(csv.parse({headers: true}))
-    let message = '';
-    let data_x=[], data_y = [];
     
     fileStream.pipe(csv.parse({headers: true}))
 
