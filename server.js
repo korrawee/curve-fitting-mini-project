@@ -27,7 +27,7 @@ app.use(session(
 app.use(logger);
 
 // Cross Origin Resource Sharing
-const whitelist = [`http://localhost:${PORT}`]
+const whitelist = [`http://localhost:${PORT}`,"http://curve-fitting-env.eba-awbkgcck.ap-southeast-1.elasticbeanstalk.com"]
 const corsOptions = {
     origin: (origin, callback) => {
         if (whitelist.indexOf(origin) !== -1 || !origin){
