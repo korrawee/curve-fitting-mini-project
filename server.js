@@ -28,7 +28,7 @@ app.use(session(
 app.use(logger);
 
 // Cross Origin Resource Sharing
-const whitelist = [`http://localhost:${PORT}`,"http://http://curve-fitting-online-dev.us-west-2.elasticbeanstalk.com"]
+const whitelist = [`http://localhost:${PORT}`,"http://curve-fitting-online-dev.us-west-2.elasticbeanstalk.com"]
 const corsOptions = {
     origin: (origin, callback) => {
         if (whitelist.indexOf(origin) !== -1 || !origin){
