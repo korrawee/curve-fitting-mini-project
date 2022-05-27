@@ -1,10 +1,10 @@
-require("dotenv").config();
 const express = require('express');
 const app = express();
 const http = require('http').Server(app);
 const cors = require('cors');
 const path = require('path');
 const fs = require('fs');
+const { Readable } = require('stream')
 const csv = require('fast-csv');
 
 const { logger }  = require('./middleware/logEvents');
@@ -112,19 +112,9 @@ app.post('^/$|/upload(.html)?', uploadFile.single("up_data"), async (req,res) =>
         message = "Please upload CSV File!";
         return res.redirect('/?mess=' + message);
     }
-    const results = await s3Upload(req,req.file);
-    try {
-       // console.log(results);
-      } catch (err) {
-        console.log(err);
-    }
-    let {key} = results;
-
-    let fileStream = await s3GetObject(key);
+ 
+    let fileStream = Readable.from(req.file.buffer);
     fileStream.pipe(csv.parse({headers: true}))
-    
-    fileStream.pipe(csv.parse({headers: true}))
-
     .on('error',(error) =>{
 
         throw error.message;
