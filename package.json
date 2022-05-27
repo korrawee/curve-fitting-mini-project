@@ -1,6 +1,6 @@
 {
   "engines": {
-    "node": ">= 18.2"
+    "node": ">= 16.15"
   },
   "name": "numer",
   "version": "1.0.0",
